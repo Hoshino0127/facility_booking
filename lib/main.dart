@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -8,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+
 
 Future<Booking> fetchBooking() async {
   final response = await http.get(
@@ -231,65 +231,60 @@ class _MyHomePageState extends State<MyHomePage> {
                ),
                alignment: Alignment(1,-1),
              ),
-     //   Container(
-     //    child: SfCalendar(
-     //     view: CalendarView.timelineDay,
-     //     timeSlotViewSettings:
-     //     TimeSlotViewSettings(timeInterval: Duration(hours: 2)),
-     //    ),
-     //    alignment: Alignment(1, 1),
-     //   ),
+
+             // time table
              Container(
-             child: Table(
-               defaultColumnWidth: FixedColumnWidth(150.0),
-               border: TableBorder.all(color: Colors.lightBlueAccent,width: 2.0),
-               children: [
-                 TableRow(
-                     children: [
-                       Text("11.00",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("11.30",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("12.00",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("12.30",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("1.00",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("1.30",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-                 TableRow(
-                     children: [
-                       Text("2.00",style: TextStyle(fontSize: 50.0),),
-                       Text("",style: TextStyle(fontSize: 50.0),),
-                     ]
-                 ),
-               ],
-             ),
+               child: Table(
+                 defaultColumnWidth: FixedColumnWidth(200.0),
+                 border: TableBorder.all(color: Colors.grey,width: 2.0),
+                 children: [
+                   TableRow(
+                       children: [
+                         Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                   TableRow(
+                       children: [
+                         Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
+                         Text("",style: TextStyle(fontSize: 50.0),),
+                       ]
+                   ),
+                 ],
+               ),
                alignment: Alignment(1, 1),
              ),
+
              Container(
                child: Icon(
                 Icons.info, color: Colors.black, size: 100.0

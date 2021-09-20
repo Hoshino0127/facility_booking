@@ -1,10 +1,44 @@
+import 'dart:io';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:date_format/date_format.dart';
+import 'dart:convert';
+
+
+Future<SignInBooking> createBooking(String username) async {
+  final http.Response response = await http.post(
+    'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+    },
+    body: jsonEncode(<String, String>{
+      'CreatedUserFullName': username,
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    return SignInBooking.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to create album.');
+  }
+}
+
+
+class SignInBooking {
+
+  final String username;
+
+  SignInBooking({this.username});
+
+  factory SignInBooking.fromJson(Map<String, dynamic> json) {
+    return SignInBooking(
+      username: json['CreatedUserFullName'],
+    );
+  }
+}
 
 
 class SignIn extends StatefulWidget {
@@ -14,13 +48,20 @@ class SignIn extends StatefulWidget {
   final String _time2;
   SignIn(this._time,this._time2, {Key key}): super(key: key);
 
+
   @override
   _SignInState createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
+  TextEditingController UsernameController = TextEditingController();
+  TextEditingController PasswordController = TextEditingController();
+  Future<SignInBooking> _future;
+
+
   @override
   Widget build(BuildContext context) {
+
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEE d MMM \n  kk:mm:ss').format(now);
@@ -99,6 +140,7 @@ class _SignInState extends State<SignIn> {
             Container(
                 padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
                 child: TextField(
+                  controller: UsernameController,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
@@ -123,12 +165,16 @@ class _SignInState extends State<SignIn> {
               alignment: Alignment(-0.8, 0.15),
             ),
 
-            // submit button
+         // submit button
             Container(
               child: RaisedButton(
                 onPressed: () {
                   print(widget._time);
                   print(widget._time2);
+                  setState(() {
+
+                    _future = createBooking(UsernameController.text);
+                  });
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -154,51 +200,51 @@ class _SignInState extends State<SignIn> {
               alignment: Alignment(-0.2, 0.36),
             ),
 
-
+            // time table
             Container(
               child: Table(
-                defaultColumnWidth: FixedColumnWidth(150.0),
-                border: TableBorder.all(color: Colors.lightBlueAccent,width: 2.0),
+                defaultColumnWidth: FixedColumnWidth(200.0),
+                border: TableBorder.all(color: Colors.grey,width: 2.0),
                 children: [
                   TableRow(
                       children: [
-                        Text("11.00",style: TextStyle(fontSize: 50.0),),
+                        Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("11.30",style: TextStyle(fontSize: 50.0),),
+                        Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("12.00",style: TextStyle(fontSize: 50.0),),
+                        Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("12.30",style: TextStyle(fontSize: 50.0),),
+                        Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("1.00",style: TextStyle(fontSize: 50.0),),
+                        Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("1.30",style: TextStyle(fontSize: 50.0),),
+                        Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("2.00",style: TextStyle(fontSize: 50.0),),
+                        Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
@@ -206,6 +252,8 @@ class _SignInState extends State<SignIn> {
               ),
               alignment: Alignment(1, 1),
             ),
+
+
             Container(
               child: Icon(
                   Icons.info, color: Colors.black, size: 100.0

@@ -29,8 +29,9 @@ class Booking {
   final String Starttime;
   final String Endtime;
   final String Purpose;
+  final String HostName;
 
-  Booking({this.FacilityID, this.Starttime, this.Purpose, this.Endtime});
+  Booking({this.FacilityID, this.Starttime, this.Purpose, this.Endtime, this.HostName});
 
   factory Booking.fromJson(Map<String, dynamic> json) {
 
@@ -39,6 +40,7 @@ class Booking {
       Starttime: json['StartDateTime'],
       Purpose: json['Purpose'],
       Endtime: json['EndDateTime'],
+      HostName: json['HostUserFullName']
     );
   }
 

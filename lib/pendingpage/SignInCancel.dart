@@ -43,11 +43,11 @@ class _SignInCancelState extends State<SignInCancel> {
                 height: 300,
                 width: 500,
                 decoration: BoxDecoration(
-                  color: Color(0xffF5F5F5),
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(30), //border corner radius
                   boxShadow:[
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),//color of shadow
+                      color: Colors.white.withOpacity(0.5),//color of shadow
                       spreadRadius: 5, //spread radius
                       blurRadius: 7, // blur radius
                       offset: Offset(0, 2), // changes position of shadow
@@ -131,51 +131,52 @@ class _SignInCancelState extends State<SignInCancel> {
               alignment: Alignment(-0.2, 0.36),
             ),
 
+
             // time table
             Container(
               child: Table(
-                defaultColumnWidth: FixedColumnWidth(150.0),
-                border: TableBorder.all(color: Colors.lightBlueAccent,width: 2.0),
+                defaultColumnWidth: FixedColumnWidth(200.0),
+                border: TableBorder.all(color: Colors.grey,width: 2.0),
                 children: [
                   TableRow(
                       children: [
-                        Text("11.00",style: TextStyle(fontSize: 50.0),),
+                        Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("11.30",style: TextStyle(fontSize: 50.0),),
+                        Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("12.00",style: TextStyle(fontSize: 50.0),),
+                        Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("12.30",style: TextStyle(fontSize: 50.0),),
+                        Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("1.00",style: TextStyle(fontSize: 50.0),),
+                        Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("1.30",style: TextStyle(fontSize: 50.0),),
+                        Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),
                   TableRow(
                       children: [
-                        Text("2.00",style: TextStyle(fontSize: 50.0),),
+                        Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                         Text("",style: TextStyle(fontSize: 50.0),),
                       ]
                   ),

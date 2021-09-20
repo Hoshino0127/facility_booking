@@ -1,15 +1,10 @@
-import 'dart:io';
 
 import 'package:facility_booking/screens/SignIn.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
 import 'dart:async';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:date_format/date_format.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
+
 
 
 class BookingTime extends StatefulWidget {
@@ -320,48 +315,48 @@ class _BookingTimeState extends State<BookingTime> {
                   // time table
                   Container(
                     child: Table(
-                      defaultColumnWidth: FixedColumnWidth(150.0),
-                      border: TableBorder.all(color: Colors.lightBlueAccent,width: 2.0),
+                      defaultColumnWidth: FixedColumnWidth(200.0),
+                      border: TableBorder.all(color: Colors.grey,width: 2.0),
                       children: [
                         TableRow(
                             children: [
-                              Text("11.00",style: TextStyle(fontSize: 50.0),),
+                              Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("11.30",style: TextStyle(fontSize: 50.0),),
+                              Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("12.00",style: TextStyle(fontSize: 50.0),),
+                              Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("12.30",style: TextStyle(fontSize: 50.0),),
+                              Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("1.00",style: TextStyle(fontSize: 50.0),),
+                              Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("1.30",style: TextStyle(fontSize: 50.0),),
+                              Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
                         TableRow(
                             children: [
-                              Text("2.00",style: TextStyle(fontSize: 50.0),),
+                              Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
                               Text("",style: TextStyle(fontSize: 50.0),),
                             ]
                         ),
