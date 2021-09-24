@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/TimeTable.dart';
 
 
 Future<Booking> fetchBooking() async {
@@ -229,79 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
              // time table
              Container(
-               child: Table(
-                 defaultColumnWidth: FixedColumnWidth(200.0),
-                 border: TableBorder.all(color: Colors.grey,width: 2.0),
-                 children: [
-                   TableRow(
-                       children: [
-                         Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.fill,
-                          child: FutureBuilder<Booking>(
-                            future: futureBooking,
-                            builder: (context, snapshot){
-                              if(snapshot.hasData){
-                                    return Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[Color(0xff4F7FFF), Color(0xff6700DD)],
-                                          ),
-                                        ),
-                                        child: Text('Booked',style: TextStyle(fontSize: 35.0,), textAlign: TextAlign.center)
-                                    );
-                              }
-                              else if (snapshot.hasError) {
-                                return Text('${snapshot.error}');
-                              }
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                          ),
-                       ],
-                   ),
-                   TableRow(
-                       children: [
-                         Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                   TableRow(
-                       children: [
-                         Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                   TableRow(
-                       children: [
-                         Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                   TableRow(
-                       children: [
-                         Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                   TableRow(
-                       children: [
-                         Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                   TableRow(
-                       children: [
-                         Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
-                   ),
-                 ],
-               ),
+               child: TimeTable(),
                alignment: Alignment(1, 1),
              ),
 
+             // Settings icon
              Container(
                child: Settings(),
                alignment: Alignment(-1,-  1),
