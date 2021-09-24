@@ -1,51 +1,13 @@
 import 'dart:io';
 import 'package:facility_booking/inprogresspage/ManageMeeting.dart';
-import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../ApiService/ApiFunction.dart' as api;
 
 
-Future<Booking> fetchBooking() async {
-  final response = await http.get(
-    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1'),
-    // Send authorization headers to the backend.
-    headers: {
-      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
-    },
-  );
-
-  // Appropriate action depending upon the
-  // server response
-  if (response.statusCode == 200) {
-    return Booking.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
-
-
-class Booking {
-
-  final String FacilityID;
-  final String Starttime;
-  final String Purpose;
-
-  Booking({this.FacilityID, this.Starttime, this.Purpose});
-
-  factory Booking.fromJson(Map<String, dynamic> json) {
-
-    return Booking(
-      FacilityID: json['FacilityID'],
-      Starttime: json['StartDateTime'],
-      Purpose: json['Purpose'],
-    );
-  }
-
-}
 
 class SignInProgress extends StatefulWidget {
   @override
@@ -54,12 +16,11 @@ class SignInProgress extends StatefulWidget {
 
 class _SignInProgressState extends State<SignInProgress> {
 
-  Future<Booking> futureBooking;
 
   @override
   void initState() {
     super.initState();
-    futureBooking = fetchBooking();
+
   }
 
   @override
@@ -92,8 +53,8 @@ class _SignInProgressState extends State<SignInProgress> {
             Container(
               margin: EdgeInsets.only(right: 300.0),
               width: double.infinity,
-              child: FutureBuilder<Booking>(
-                future: futureBooking,
+              child: FutureBuilder<api.Booking>(
+                future: api.fetchBooking(),
                 builder: (context, snapshot) {
 
                   if (snapshot.hasData) {
@@ -135,8 +96,8 @@ class _SignInProgressState extends State<SignInProgress> {
             Container(
               margin: EdgeInsets.only(right: 300.0),
               width: double.infinity,
-              child: FutureBuilder<Booking>(
-                future: futureBooking,
+              child: FutureBuilder<api.Booking>(
+                future: api.fetchBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(snapshot.data.Purpose,

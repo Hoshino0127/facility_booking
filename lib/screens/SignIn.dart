@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-
+// POST REQUEST TO SIGN IN
 Future<SignInBooking> createBooking(String username) async {
   final http.Response response = await http.post(
     'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings',
@@ -56,15 +56,16 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
+
   Future<SignInBooking> _future;
 
 
   @override
   Widget build(BuildContext context) {
 
-
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEE d MMM \n  kk:mm:ss').format(now);
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -155,6 +156,7 @@ class _SignInState extends State<SignIn> {
             Container(
               padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
               child: TextField(
+                controller: PasswordController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
@@ -172,8 +174,7 @@ class _SignInState extends State<SignIn> {
                   print(widget._time);
                   print(widget._time2);
                   setState(() {
-
-                    _future = createBooking(UsernameController.text);
+                  /*  _future = createBooking(UsernameController.text);*/
                   });
                   Navigator.push(
                     context,
@@ -209,7 +210,13 @@ class _SignInState extends State<SignIn> {
                   TableRow(
                       children: [
                         Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
+                        TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.fill,
+                            child: Container(
+                                color: Colors.deepPurpleAccent,
+                                child: Text('Booked',style: TextStyle(fontSize: 35.0,  ), textAlign: TextAlign.center)
+                            )
+                        ),
                       ]
                   ),
                   TableRow(

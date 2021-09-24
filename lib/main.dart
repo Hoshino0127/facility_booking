@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:facility_booking/Elements/Settings.dart';
+import 'package:facility_booking/Elements/TimeDate.dart';
+import 'package:facility_booking/Elements/Info.dart';
 
 
 Future<Booking> fetchBooking() async {
   final response = await http.get(
-    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1'),
+    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/7'),
     // Send authorization headers to the backend.
     headers: {
-
       HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
     },
   );
@@ -32,12 +32,16 @@ Future<Booking> fetchBooking() async {
 class Booking {
 
   final String FacilityID;
+  final String Starttime;
+  final String Endtime;
 
-  Booking({this.FacilityID});
+  Booking({this.FacilityID,this.Starttime,  this.Endtime});
 
   factory Booking.fromJson(Map<String, dynamic> json) {
     return Booking(
       FacilityID: json['FacilityID'],
+      Starttime: json['StartDateTime'],
+      Endtime: json['EndDateTime'],
     );
   }
 }
@@ -52,7 +56,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'Arial',
         primarySwatch: Colors.blue,
@@ -77,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Booking> futureBooking;
 
+
   @override
   void initState() {
     super.initState();
@@ -86,8 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEE d MMM \n  kk:mm:ss').format(now);
 
     return Scaffold(
       appBar: AppBar(
@@ -193,7 +195,6 @@ class _MyHomePageState extends State<MyHomePage> {
              ),
 
              Container(
-
                child: RaisedButton(
                  onPressed: () {
                    Navigator.push(
@@ -222,13 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
              ),
 
              Container(
-               child: Text(
-                   formattedDate,
-                   style: new TextStyle(
-                     fontSize: 40,
-                     color: Colors.grey,
-                   )
-               ),
+               child: TimeDate(),
                alignment: Alignment(1,-1),
              ),
 
@@ -241,8 +236,30 @@ class _MyHomePageState extends State<MyHomePage> {
                    TableRow(
                        children: [
                          Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
-                         Text("",style: TextStyle(fontSize: 50.0),),
-                       ]
+                        TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.fill,
+                          child: FutureBuilder<Booking>(
+                            future: futureBooking,
+                            builder: (context, snapshot){
+                              if(snapshot.hasData){
+                                    return Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: <Color>[Color(0xff4F7FFF), Color(0xff6700DD)],
+                                          ),
+                                        ),
+                                        child: Text('Booked',style: TextStyle(fontSize: 35.0,), textAlign: TextAlign.center)
+                                    );
+                              }
+                              else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                            },
+                          ),
+                          ),
+                       ],
                    ),
                    TableRow(
                        children: [
@@ -286,9 +303,12 @@ class _MyHomePageState extends State<MyHomePage> {
              ),
 
              Container(
-               child: Icon(
-                Icons.info, color: Colors.black, size: 100.0
-               ),
+               child: Settings(),
+               alignment: Alignment(-1,-  1),
+             ),
+
+             Container(
+               child: Info(),
                alignment: Alignment(1,-0.5),
              ),
            ]

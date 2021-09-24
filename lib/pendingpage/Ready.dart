@@ -80,6 +80,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData)
                   {
+
                     DateTime parseDate =
                     new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(snapshot.data.Starttime);
                     var inputDate = DateTime.parse(parseDate.toString());
