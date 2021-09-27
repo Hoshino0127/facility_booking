@@ -1,13 +1,15 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+/*
 
 Future<Booking> fetchBooking() async {
   final response = await http.get(
-    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/2'),
+    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings'),
     // Send authorization headers to the backend.
     headers: {
       HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
@@ -18,9 +20,29 @@ Future<Booking> fetchBooking() async {
   // server response
   if (response.statusCode == 200) {
     return Booking.fromJson(json.decode(response.body));
+
+
   } else {
     throw Exception('Failed to load album');
   }
+}
+*/
+
+Future<List<Booking>> fetchBooking(http.Client client) async {
+  final response = await http.get(
+      Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings'),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+      });
+  return compute(parseBooking, response.body);
+}
+
+// A function that converts a response body into a List<Photo>.
+List<Booking> parseBooking(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Booking>((json) => Booking.fromJson(json)).toList();
 }
 
 
@@ -53,16 +75,18 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> {
-  Future<Booking> futureBooking;
+  /*Future<Booking> futureBooking;*/
+   List<Booking> booking;
 
   @override
   void initState() {
     super.initState();
-    futureBooking = fetchBooking();
+    /*futureBooking = fetchBooking();*/
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child:  Table(
         defaultColumnWidth: FixedColumnWidth(200.0),
@@ -73,8 +97,8 @@ class _TimeTableState extends State<TimeTable> {
               Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.fill,
-                child: FutureBuilder<Booking>(
-                  future: futureBooking,
+                child: FutureBuilder<List<Booking>>(
+                  future: fetchBooking(http.Client()),
                   builder: (context, snapshot){
                     if(snapshot.hasData){
                       return Container(
@@ -137,4 +161,5 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 }
+
 

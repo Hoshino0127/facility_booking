@@ -34,7 +34,7 @@ class _BookingTimeState extends State<BookingTime> {
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   TimeOfDay selectedTime2 = TimeOfDay(hour: 00, minute: 00);
 
-  TextEditingController _dateController = TextEditingController();
+
   TextEditingController _timeController = TextEditingController();
   TextEditingController _time2Controller = TextEditingController();
 
@@ -90,8 +90,7 @@ class _BookingTimeState extends State<BookingTime> {
 
 
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEE d MMM \n  kk:mm:ss').format(now);
+
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
@@ -117,11 +116,6 @@ class _BookingTimeState extends State<BookingTime> {
                     alignment: Alignment(-0.5, -0.7),
                   ),
 
-                 // time and date
-                  Container(
-                    child: TimeDate(),
-                    alignment: Alignment(1,-1),
-                  ),
 
 
                   // center box
@@ -327,6 +321,13 @@ class _BookingTimeState extends State<BookingTime> {
                     child: Info(),
                     alignment: Alignment(1,-0.5),
                   ),
+
+                  // time and date
+                  Container(
+                    child: TimeDate(),
+                    alignment: Alignment(1,-1),
+                  ),
+
 
                 ]
             )

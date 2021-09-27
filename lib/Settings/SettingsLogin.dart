@@ -1,3 +1,4 @@
+import 'package:facility_booking/Settings/SettingsPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -102,6 +103,11 @@ class _SettingsLoginState extends State<SettingsLogin> {
                  Container(
                    child: RaisedButton(
                      onPressed: () {
+                       Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => SettingsPage(),
+                         ),);
                        },
                      textColor: Colors.white,
                      padding : EdgeInsets.fromLTRB(0,0,0,0),

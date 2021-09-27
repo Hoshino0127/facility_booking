@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/Settings.dart';
+import 'package:facility_booking/Elements/TimeDate.dart';
+import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/inprogresspage/ManageMeeting.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -217,74 +221,25 @@ class _SignInProgressState extends State<SignInProgress> {
 
             // time table
             Container(
-              child: Table(
-                defaultColumnWidth: FixedColumnWidth(200.0),
-                border: TableBorder.all(color: Colors.grey,width: 2.0),
-                children: [
-                  TableRow(
-                      children: [
-                        Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("11.30am",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("12.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("12.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("1.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("1.30pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        Text("2.00pm",style: TextStyle(fontSize: 35.0, color: Colors.grey,),),
-                        Text("",style: TextStyle(fontSize: 50.0),),
-                      ]
-                  ),
-                ],
-              ),
+              child: TimeTable(),
               alignment: Alignment(1, 1),
             ),
-            // settings
+
+            // Settings icon
             Container(
-              child: Icon(
-                  Icons.info, color: Colors.black, size: 100.0
-              ),
+              child: Settings(),
+              alignment: Alignment(-1,-  1),
+            ),
+
+            //info
+            Container(
+              child: Info(),
               alignment: Alignment(1,-0.5),
             ),
 
             // time and date
             Container(
-              child: Text(
-                  formattedDate,
-                  style: new TextStyle(
-                    fontSize: 40,
-                    color: Colors.grey,
-
-                  )
-              ),
+              child: TimeDate(),
               alignment: Alignment(1,-1),
             ),
           ],
