@@ -7,6 +7,7 @@ import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
 
 
 
@@ -74,6 +75,83 @@ class _BookingTimeState extends State<BookingTime> {
       });
   }
 
+  // Alert Dialog if the time is null
+  NullTimeDialog(BuildContext context) {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Enter Booking Time"),
+      content: Text("Please enter the booking time to proceed"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  //Confirm Booking Alert Dialog
+  ConfirmBookingDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed:  () {
+        if(_time == null && _time2 == null ){
+          NullTimeDialog(context);
+        }
+        else{
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignIn(_time, _time2),
+            ),);
+        }
+        },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(" Confirm Booking?"),
+      content: Text("To commence meeting timely,15 minutes is required prior to complete booking confirmation.\n"
+          "Proceed to confirm booking?\n"
+          "*Note meeting will be delayed due to late booking confirmation"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
   @override
   void initState() {
     _timeController.text = formatDate(
@@ -94,7 +172,6 @@ class _BookingTimeState extends State<BookingTime> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
-
 
     return Scaffold(
 
@@ -147,11 +224,7 @@ class _BookingTimeState extends State<BookingTime> {
                   Container(
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignIn(_time,_time2),
-                          ),);
+                        ConfirmBookingDialog(context);
                       },
                       textColor: Colors.white,
                       padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -238,7 +311,6 @@ class _BookingTimeState extends State<BookingTime> {
                         _selectTime2(context);
                       },
                       child: Container(
-
                         width: _width / 8,
                         height: _height / 10,
                         alignment: Alignment.center,

@@ -5,10 +5,6 @@ import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/inprogresspage/ManageMeeting.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../ApiService/ApiFunction.dart' as api;
 
 
@@ -19,23 +15,26 @@ class SignInProgress extends StatefulWidget {
 }
 
 class _SignInProgressState extends State<SignInProgress> {
+  TextEditingController UsernameController = TextEditingController();
+  TextEditingController PasswordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEE d MMM \n  kk:mm:ss').format(now);
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
       ),
-      body: Center(
+      body: Form(
+        key: _formKey,
         child: Stack(
           children: <Widget>[
             Container(
@@ -158,46 +157,62 @@ class _SignInProgressState extends State<SignInProgress> {
                       fontWeight: FontWeight.bold
                   )
               ),
-              alignment: Alignment(-0.3, 0.2),
+              alignment: Alignment(-0.3, 0.23),
             ),
 
             // username text field
             Container(
               padding: EdgeInsets.fromLTRB(280, 12, 600, 12),
-              child: TextField(
+              child: TextFormField(
+                controller: UsernameController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
                   labelText: 'User Name',
                 ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Username is empty';
+                  }
+                  return null;
+                },
               ),
-              alignment: Alignment(-0.8, 0.4),
+              alignment: Alignment(-0.8, 0.5),
             ),
 
             // password textfield
             Container(
               padding: EdgeInsets.fromLTRB(280, 12, 600, 12),
-              child: TextField(
+              child: TextFormField(
+                controller: PasswordController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Password is empty';
+                  }
+                  return null;
+                },
               ),
-              alignment: Alignment(-0.8, 0.65),
+              alignment: Alignment(-0.8, 0.75),
             ),
 
             // submit button
             Container(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ManageMeeting()
-                    ),);
+                  if (_formKey.currentState.validate()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ManageMeeting()
+                      ),);
+                  }
                 },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),

@@ -10,7 +10,7 @@ class Settings extends StatelessWidget {
         icon: Icon(
           Icons.settings,
           color: Colors.blue,
-          size: 100.0,
+          size: 80.0,
         ),
         onPressed: () {
           Navigator.push(

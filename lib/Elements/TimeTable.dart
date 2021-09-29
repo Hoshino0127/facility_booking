@@ -97,7 +97,7 @@ class _TimeTableState extends State<TimeTable> {
               Text("11.00am",style: TextStyle(fontSize: 35.0, color: Colors.grey, ),),
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.fill,
-                child: FutureBuilder<List<Booking>>(
+               child: FutureBuilder<List<Booking>>(
                   future: fetchBooking(http.Client()),
                   builder: (context, snapshot){
                     if(snapshot.hasData){
@@ -107,7 +107,7 @@ class _TimeTableState extends State<TimeTable> {
                               colors: <Color>[Color(0xff4F7FFF), Color(0xff6700DD)],
                             ),
                           ),
-                          child: Text('Booked',style: TextStyle(fontSize: 35.0,), textAlign: TextAlign.center)
+                          child: Text('Booked',style: TextStyle(fontSize: 35.0,color: Colors.white,), textAlign: TextAlign.center)
                       );
                     }
                     else if (snapshot.hasError) {
@@ -117,7 +117,7 @@ class _TimeTableState extends State<TimeTable> {
                     return const CircularProgressIndicator();
                   },
                 ),
-              ),
+              )
             ],
           ),
           TableRow(

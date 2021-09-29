@@ -125,7 +125,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                        child: const Text('Submit', style: TextStyle(fontSize: 20)),
                      ),
                    ),
-                   alignment: Alignment(-0.2, 0.3),
+                   alignment: Alignment(-0.15, 0.3),
                  ),
 
                  // cancel button

@@ -15,14 +15,22 @@ class SignInCancel extends StatefulWidget {
 }
 
 class _SignInCancelState extends State<SignInCancel> {
+
+  TextEditingController UsernameController = TextEditingController();
+  TextEditingController PasswordController = TextEditingController();
+
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-
       ),
-      body: Center(
+      body: Form(
+        key: _formKey,
         child: Stack(
           children: <Widget>[
             // pending confirmation text
@@ -80,13 +88,20 @@ class _SignInCancelState extends State<SignInCancel> {
             // username text field
             Container(
               padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
-              child: TextField(
+              child: TextFormField(
+                controller: UsernameController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
                   labelText: 'User Name',
                 ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Username is empty';
+                  }
+                  return null;
+                },
               ),
               alignment: Alignment(-0.8, -0.1),
             ),
@@ -94,13 +109,20 @@ class _SignInCancelState extends State<SignInCancel> {
             // password textfield
             Container(
               padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
-              child: TextField(
+              child: TextFormField(
+                controller: PasswordController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Password is empty';
+                  }
+                  return null;
+                },
               ),
               alignment: Alignment(-0.8, 0.15),
             ),
@@ -109,11 +131,13 @@ class _SignInCancelState extends State<SignInCancel> {
             Container(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CancelBooking()
-                    ),);
+                  if (_formKey.currentState.validate()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CancelBooking()
+                      ),);
+                  }
                 },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -131,7 +155,7 @@ class _SignInCancelState extends State<SignInCancel> {
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.2, 0.36),
+              alignment: Alignment(-0.2, 0.3),
             ),
 
 

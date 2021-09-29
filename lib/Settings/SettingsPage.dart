@@ -122,12 +122,13 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       ),
+
       body: Center(
-          child: ListView(
+          child: Stack(
           children: <Widget>[
 
             Container(
-              padding: EdgeInsets.fromLTRB(300, 100, 300, 0),
+              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
               child: FormField<String>(
               builder: (FormFieldState<String> state) {
                 return InputDecorator(
@@ -164,6 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               },
               ),
+              alignment: Alignment(0, -0.8),
             ),
 
             Container(
@@ -204,6 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   );
                 },
               ),
+              alignment: Alignment(0, -0.5),
             ),
 
             Container(
@@ -245,19 +248,19 @@ class _SettingsPageState extends State<SettingsPage> {
                   );
                 },
               ),
+              alignment: Alignment(0, -0.2),
             ),
 
          /*   Container(
               padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
             ),
+
 */
-         // center box
             Container(
-              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
               child: Container(
                 margin: EdgeInsets.all(20),
                 height: 100,
-                width: 300,
+                width: 500,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(30), //border corner radius
@@ -273,46 +276,96 @@ class _SettingsPageState extends State<SettingsPage> {
                     //you can set more BoxShadow() here
                   ],
                 ),
-                // time 1
-                child:  Container(
-                  child: InkWell(
-                    onTap: () {
-                      _selectTime(context);
+              ),
+              alignment: Alignment(0, 0.2),
+            ),
+
+            //time 1
+            Container(
+              child: InkWell(
+                onTap: () {
+                  _selectTime(context);
+                },
+                child: Container(
+
+                  width: _width / 8,
+                  height: _height / 10,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: Colors.grey[200]),
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 30),
+                    textAlign: TextAlign.center,
+                    onSaved: (String val) {
+                      _setTime = val;
                     },
-                    child: Container(
-                      width: _width / 8,
-                      height: _height / 10,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.grey[200]),
-                      child: TextFormField(
-                        style: TextStyle(fontSize: 30),
-                        textAlign: TextAlign.center,
-                        onSaved: (String val) {
-                          _setTime = val;
-                        },
-                        enabled: false,
-                        keyboardType: TextInputType.text,
-                        controller: _timeController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          labelText: 'Start',
-                        ),
-                      ),
+                    enabled: false,
+                    keyboardType: TextInputType.text,
+                    controller: _timeController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: 'Start',
                     ),
                   ),
-                  alignment: Alignment( 0, -0.1),
                 ),
               ),
+              alignment: Alignment(-0.02, 0.18),
+            ),
+
+
+            // time 2
+            Container(
+              child: InkWell(
+                onTap: () {
+                  _selectTime2(context);
+                },
+                child: Container(
+
+                  width: _width / 8,
+                  height: _height / 10,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: Colors.grey[200]),
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 30),
+                    textAlign: TextAlign.center,
+                    onSaved: (String val2) {
+                      _setTime2 = val2;
+                    },
+                    enabled: false,
+                    keyboardType: TextInputType.text,
+                    controller: _time2Controller,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: 'End',
+                    ),
+                  ),
+                ),
+              ),
+              alignment: Alignment(0.29, 0.18),
+            ),
+
+            Container(
+              child: Text(
+                  'Room Operating \n Time',
+                  style: new TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                  ),
+                textAlign: TextAlign.center,
+              ),
+              alignment: Alignment(-0.3, 0.18),
             ),
 
             // Confirm Button
             Container(
               child: RaisedButton(
                 onPressed: () {
-
                 },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -333,6 +386,30 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment(-0.2, 0.5),
             ),
 
+            //cancel button
+            Container(
+              child: RaisedButton(
+                onPressed: () {
+
+                },
+                textColor: Colors.white,
+                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    gradient: LinearGradient(
+                      colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
+                    ),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                  child: const Text('Cancel', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              alignment: Alignment(0.2, 0.5),
+            ),
 
           ],
           )

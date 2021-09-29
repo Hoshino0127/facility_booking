@@ -1,78 +1,57 @@
 import 'dart:io';
+
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
-import 'package:facility_booking/screens/BookingDetails.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-/*
-// POST REQUEST TO SIGN IN
-Future<SignInBooking> createBooking(String username) async {
-  final http.Response response = await http.post(
-    'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
-    },
-    body: jsonEncode(<String, String>{
-      'CreatedUserFullName': username,
-    }),
-  );
+import 'package:dio/dio.dart';
 
-  if (response.statusCode == 201) {
-    return SignInBooking.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to create album.');
-  }
-}
-
-
-class SignInBooking {
-
-  final String username;
-
-  SignInBooking({this.username});
-
-  factory SignInBooking.fromJson(Map<String, dynamic> json) {
-    return SignInBooking(
-      username: json['CreatedUserFullName'],
-    );
-  }
-}*/
-
-
-class SignIn extends StatefulWidget {
-
-  // passing parameters from booking time page
+class BookingDetails extends StatefulWidget {
   final String _time;
   final String _time2;
-  SignIn(this._time,this._time2, {Key key}): super(key: key);
-
+  BookingDetails(this._time,this._time2, {Key key}): super(key: key);
 
   @override
-  _SignInState createState() => _SignInState();
+  _BookingDetailsState createState() => _BookingDetailsState();
 }
 
-class _SignInState extends State<SignIn> {
-  TextEditingController UsernameController = TextEditingController();
-  TextEditingController PasswordController = TextEditingController();
+TextEditingController HostController = TextEditingController();
+TextEditingController DetailsController = TextEditingController();
 
-  /*Future<SignInBooking> _future;*/
+final _formKey = GlobalKey<FormState>();
 
-  final _formKey = GlobalKey<FormState>();
+
+class _BookingDetailsState extends State<BookingDetails> {
+
+  Dio dio = new Dio();
+
+  // post booking
+  Future createBooking() async {
+    final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/9';
+
+    dynamic data = {
+      'StartDateTime' : widget._time,
+      'EndDateTime' : widget._time2,
+      'HostUserFullName' : HostController,
+      'Purpose' : DetailsController,
+    };
+    var response = await dio.post(pathUrl,data: data, options: Options(
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+      })
+    );
+    return response.data;
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
 
       ),
@@ -80,6 +59,7 @@ class _SignInState extends State<SignIn> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
+
             // available text
             Container(
               child: Text(
@@ -93,11 +73,12 @@ class _SignInState extends State<SignIn> {
               alignment: Alignment(-0.5, -0.7),
             ),
 
+
             // center box
             Container(
               child: Container(
                 margin: EdgeInsets.all(20),
-                height: 300,
+                height: 500,
                 width: 500,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
@@ -115,80 +96,65 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
               ),
-              alignment: Alignment(-0.65, 0),
+              alignment: Alignment(-0.65, 0.4),
             ),
 
-            //please sign in text
-            Container(
-              child: Text(
-                  'Please Sign-In',
-                  style: new TextStyle(
-                      fontSize: 30,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  )
-              ),
-              alignment: Alignment(-0.45, -0.3),
-            ),
-
-            //username text box
-           Container(
-                padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
-                child: TextFormField(
-                  controller: UsernameController,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                    labelText: 'User Name',
-                  ),
-                  validator: (text) {
-                    if (text == null || text.isEmpty) {
-                      return 'Username is empty';
-                    }
-                    return null;
-                  },
-                ),
-                alignment: Alignment(-0.8, -0.1),
-            ),
-
-
-            // password text field
+            //HostName text box
             Container(
               padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
               child: TextFormField(
-                controller: PasswordController,
+                controller: HostController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
-                  labelText: 'Password',
+                  labelText: 'Host Name',
                 ),
                 validator: (text) {
                   if (text == null || text.isEmpty) {
-                    return 'Password is empty';
+                    return 'Host Name is empty';
                   }
                   return null;
                 },
               ),
-              alignment: Alignment(-0.8, 0.15),
+              alignment: Alignment(-0.8, -0.4),
             ),
 
+            //
+            Container(
+              padding:  EdgeInsets.fromLTRB(180, 12, 670, 12),
+              child: TextFormField(
+                controller: DetailsController,
+                maxLines: 10,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(),
+                  labelText: 'Booking Details',
+                ),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Booking Details is empty';
+                  }
+                  return null;
+                },
+              ),
+              alignment: Alignment(-0.8, 0.1),
+            ),
 
-         // submit button
+            // submit button
             Container(
               child: RaisedButton(
-                onPressed: () {
-
-                  setState(() {
-                  /*  _future = createBooking(UsernameController.text);*/
-                  });
+                onPressed: ()async {
                   if (_formKey.currentState.validate()) {
+                   /* await createBooking().then((value) => {
+                      print(value)
+                    });*/
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookingDetails(widget._time,widget._time2),
-                    ),);
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReadyToStart(),
+                      ),);
                   }
                 },
                 textColor: Colors.white,
@@ -207,8 +173,34 @@ class _SignInState extends State<SignIn> {
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.2, 0.3),
+              alignment: Alignment(-0.6, 0.55),
             ),
+
+            // cancel button
+            Container(
+              child: RaisedButton(
+                onPressed: () {
+
+                },
+                textColor: Colors.white,
+                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    gradient: LinearGradient(
+                      colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
+                    ),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                  child: const Text('Cancel', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              alignment: Alignment(-0.25, 0.55),
+            ),
+
 
             // time table
             Container(
@@ -233,7 +225,6 @@ class _SignInState extends State<SignIn> {
               child: TimeDate(),
               alignment: Alignment(1,-1),
             ),
-
           ],
         ),
       ),
