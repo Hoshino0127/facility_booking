@@ -1,3 +1,4 @@
+import 'package:facility_booking/ApiService/test.dart';
 import 'package:facility_booking/screens/SignIn.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -195,6 +196,54 @@ class _BookingTimeState extends State<BookingTime> {
 
 
 
+                  Container(
+                    child: InkWell(
+                      onTap: () {
+                        DateTimeRangePicker(
+                            startText: "From",
+                            endText: "To",
+                            doneText: "Yes",
+                            cancelText: "Cancel",
+                            interval: 5,
+                            initialStartTime: DateTime.now(),
+                            initialEndTime: DateTime.now().add(Duration(minutes: 30)),
+                            mode: DateTimeRangePickerMode.dateAndTime,
+                            minimumTime: DateTime.now().subtract(Duration(days: 5)),
+                            maximumTime: DateTime.now().add(Duration(days: 25)),
+                            use24hFormat: true,
+                            onConfirm: (start, end) {
+                              print(start);
+                              print(end);
+                            }).showPicker(context);
+                      },
+                      child: Container(
+
+                        width: _width / 8,
+                        height: _height / 10,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: Colors.grey[200]),
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 30),
+                          textAlign: TextAlign.center,
+                          onSaved: (String val) {
+                            _setTime = val;
+                          },
+                          enabled: false,
+                          keyboardType: TextInputType.text,
+                          controller: _timeController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelText: 'Start',
+                          ),
+                        ),
+                      ),
+                    ),
+                    alignment: Alignment(-0.48, -0.1),
+                  ),
+
                   // center box
                   Container(
                    child: Container(
@@ -224,7 +273,12 @@ class _BookingTimeState extends State<BookingTime> {
                   Container(
                     child: RaisedButton(
                       onPressed: () {
-                        ConfirmBookingDialog(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignIn(_time, _time2),
+                          ),);
+                       /* ConfirmBookingDialog(context);*/
                       },
                       textColor: Colors.white,
                       padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -249,7 +303,11 @@ class _BookingTimeState extends State<BookingTime> {
                   Container(
                     child: RaisedButton(
                       onPressed: () {
-                       print(_time2);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => TestGet()
+                        ));
                       },
                       textColor: Colors.white,
                       padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -270,7 +328,51 @@ class _BookingTimeState extends State<BookingTime> {
                     alignment: Alignment(-0.15, 0.2),
                   ),
 
-                  //time 1
+                  Container(
+                    child: InkWell(
+                      onTap: () {
+                        DateTimeRangePicker(
+                            startText: "From",
+                            endText: "To",
+                            doneText: "Yes",
+                            cancelText: "Cancel",
+                            interval: 5,
+                            initialStartTime: DateTime.now(),
+                            initialEndTime: DateTime.now().add(Duration(minutes: 30)),
+                            mode: DateTimeRangePickerMode.dateAndTime,
+                            minimumTime: DateTime.now().subtract(Duration(days: 5)),
+                            maximumTime: DateTime.now().add(Duration(days: 25)),
+                            use24hFormat: true,
+                            onConfirm: (start, end) {
+                              print(start);
+                              print(end);
+                            }).showPicker(context);
+                      },
+                      child: Container(
+                        width: _width / 4,
+                        height: _height / 10,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: Colors.grey[200]),
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 30),
+                          textAlign: TextAlign.center,
+                          enabled: false,
+                          keyboardType: TextInputType.text,
+                          controller: _timeController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelText: 'Pick Time and Date',
+                          ),
+                        ),
+                      ),
+                    ),
+                    alignment: Alignment(-0.35, -0.1),
+                  ),
+
+                /*  //time 1
                   Container(
                     child: InkWell(
                       onTap: () {
@@ -335,7 +437,7 @@ class _BookingTimeState extends State<BookingTime> {
                       ),
                     ),
                     alignment: Alignment(-0.15, -0.1),
-                  ),
+                  ),*/
 
                   // booking text
                   Container(
@@ -363,7 +465,7 @@ class _BookingTimeState extends State<BookingTime> {
                     alignment: Alignment(-0.73, -0.1),
                   ),
 
-                  Container(
+                /*  Container(
                     child: Text(
                         '-',
                         style: new TextStyle(
@@ -373,7 +475,7 @@ class _BookingTimeState extends State<BookingTime> {
                         )
                     ),
                     alignment: Alignment(-0.28, -0.12),
-                  ),
+                  ),*/
 
 
                   // time table

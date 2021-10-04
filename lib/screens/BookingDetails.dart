@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
@@ -29,13 +28,12 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   // post booking
   Future createBooking() async {
-    final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/9';
+    final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
 
     dynamic data = {
       'StartDateTime' : widget._time,
       'EndDateTime' : widget._time2,
-      'HostUserFullName' : HostController,
-      'Purpose' : DetailsController,
+
     };
     var response = await dio.post(pathUrl,data: data, options: Options(
       headers: {

@@ -11,7 +11,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
 
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +27,15 @@ class _SettingsLoginState extends State<SettingsLogin> {
         ),
         ),
         ),
-          body: Center(
+          body: Form(
+            key: _formKey,
             child: Stack(
                children: <Widget>[
-
                  // Center Box
                  Container(
                    child: Container(
                      margin: EdgeInsets.all(20),
-                     height: 300,
+                     height: 400,
                      width: 500,
                      decoration: BoxDecoration(
                        color: Colors.grey[200],
@@ -66,13 +66,13 @@ class _SettingsLoginState extends State<SettingsLogin> {
                            fontWeight: FontWeight.bold
                        )
                    ),
-                   alignment: Alignment(0, -0.3),
+                   alignment: Alignment(0, -0.4),
                  ),
 
                  //username text box
                  Container(
                    padding: EdgeInsets.fromLTRB(400, 12, 400, 12),
-                   child: TextField(
+                   child: TextFormField(
                      controller: UsernameController,
                      decoration: InputDecoration(
                        fillColor: Colors.white,
@@ -80,14 +80,21 @@ class _SettingsLoginState extends State<SettingsLogin> {
                        border: OutlineInputBorder(),
                        labelText: 'User Name',
                      ),
+                     validator: (text) {
+                       if (text == null || text.isEmpty) {
+                         return 'Username is empty';
+                       }
+                       return null;
+                     },
                    ),
-                   alignment: Alignment(0, -0.1),
+                   alignment: Alignment(0, -0.2),
                  ),
+
 
                  // password text field
                  Container(
                    padding: EdgeInsets.fromLTRB(400, 12, 400, 12),
-                   child: TextField(
+                   child: TextFormField(
                      controller: PasswordController,
                      decoration: InputDecoration(
                        fillColor: Colors.white,
@@ -95,19 +102,28 @@ class _SettingsLoginState extends State<SettingsLogin> {
                        border: OutlineInputBorder(),
                        labelText: 'Password',
                      ),
+                     validator: (text) {
+                       if (text == null || text.isEmpty) {
+                         return 'Password is empty';
+                       }
+                       return null;
+                     },
                    ),
-                   alignment: Alignment(-0.8, 0.15),
+                   alignment: Alignment(-0.8, 0.05),
                  ),
+
 
                  // Confirm Button
                  Container(
                    child: RaisedButton(
                      onPressed: () {
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                           builder: (context) => SettingsPage(),
-                         ),);
+                       if (_formKey.currentState.validate()) {
+                         Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                             builder: (context) => SettingsPage(),
+                           ),);
+                       }
                        },
                      textColor: Colors.white,
                      padding : EdgeInsets.fromLTRB(0,0,0,0),

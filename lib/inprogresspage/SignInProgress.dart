@@ -230,7 +230,7 @@ class _SignInProgressState extends State<SignInProgress> {
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.08, 0.85),
+              alignment: Alignment(-0.08, 0.9),
             ),
 
 

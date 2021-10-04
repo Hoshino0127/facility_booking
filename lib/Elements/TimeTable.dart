@@ -116,7 +116,7 @@ class _TimeTableState extends State<TimeTable> {
                     // By default, show a loading spinner.
                     return const CircularProgressIndicator();
                   },
-                ),
+                )
               )
             ],
           ),
