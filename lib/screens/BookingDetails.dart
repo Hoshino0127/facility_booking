@@ -1,52 +1,72 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:facility_booking/ApiService/BookingModel.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 class BookingDetails extends StatefulWidget {
-  final String _time;
-  final String _time2;
-  BookingDetails(this._time,this._time2, {Key key}): super(key: key);
+  final DateTime StartTime;
+  final DateTime EndTime;
+  BookingDetails(this.StartTime,this.EndTime, {Key key}): super(key: key);
 
   @override
   _BookingDetailsState createState() => _BookingDetailsState();
 }
 
-TextEditingController HostController = TextEditingController();
-TextEditingController DetailsController = TextEditingController();
 
-final _formKey = GlobalKey<FormState>();
+Future<BookingModel> createBooking(String Hostname, /*String StartTime, String EndTime, */String Details )async {
+
+final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
+
+var headers = {
+  'Content-Type': 'application/json',
+  HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+};
+
+var body = {
+  "LocationKey": "23",
+  "StartDateTime" : "2021-10-27T10:30:00Z",
+  "EndDateTime": "2021-10-27T11:00:00Z",
+  "Purpose": Details,
+  "HostObjectKey": "1",
+  "HostObjectType": "Organization.OrgStaff",
+  "HostUserFullName": Hostname,
+
+};
+
+var response = await http.post(Uri.parse(pathUrl),
+  headers: headers,
+  body: jsonEncode(body), // use jsonEncode()
+);
+
+if (response.statusCode == 200) {
+  print("${response.statusCode}");
+} else {
+  throw Exception('Failed to load album');
+}
+  print("${response.statusCode}");
+  print("${response.body}");
+}
+
 
 
 class _BookingDetailsState extends State<BookingDetails> {
 
-  Dio dio = new Dio();
+  TextEditingController HostController = TextEditingController();
+  TextEditingController DetailsController = TextEditingController();
 
-  // post booking
-  Future createBooking() async {
-    final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
+  final _formKey = GlobalKey<FormState>();
 
-    dynamic data = {
-      'StartDateTime' : widget._time,
-      'EndDateTime' : widget._time2,
-
-    };
-    var response = await dio.post(pathUrl,data: data, options: Options(
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
-      })
-    );
-    return response.data;
-  }
-
+  BookingModel _booking;
 
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -145,9 +165,16 @@ class _BookingDetailsState extends State<BookingDetails> {
               child: RaisedButton(
                 onPressed: ()async {
                   if (_formKey.currentState.validate()) {
-                   /* await createBooking().then((value) => {
-                      print(value)
-                    });*/
+                   final String Hostname = HostController.text;
+                   final String Details = DetailsController.text;
+                  /* final String StartTime = widget.StartTime;
+                   final String EndTime = widget.EndTime;*/
+
+                   BookingModel booking = await createBooking(Hostname, Details);
+
+                   setState(() {
+                     _booking = booking;
+                   });
                     Navigator.push(
                       context,
                       MaterialPageRoute(

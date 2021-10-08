@@ -14,7 +14,7 @@ class TestGet extends StatefulWidget {
 }
 
 class _TestGetState extends State<TestGet> {
-  String stringData;
+ /* String stringData;
   Future getData() async{
     var dio = new Dio();
     dio.interceptors.add(InterceptorsWrapper(onRequest: (RequestOptions options){
@@ -32,49 +32,97 @@ class _TestGetState extends State<TestGet> {
    });
   return response.data;
   }
+*/
+  DateTime date;
+  TimeOfDay time;
+  DateTime dateTime;
 
-  Future decodeData() async{
-    final Map parsedData = await jsonDecode(stringData);
-    print(parsedData.toString());
+  Future<DateTime> pickDate(BuildContext context) async{
+    final initialDate = DateTime.now();
+    final newDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5),
+    );
+    if(newDate == null) return null;
+    return newDate;
   }
 
 
+  Future<TimeOfDay> pickTime(BuildContext context) async{
+    final initialTime = TimeOfDay(hour: 00, minute: 00);
+    final newTime = await showTimePicker(context: context,
+        initialTime: dateTime != null ? TimeOfDay(hour: dateTime.hour, minute: dateTime.minute) : initialTime,);
+    if (newTime == null) return null;
+    return newTime;
+  }
+
+  Future pickDateTime(BuildContext context)async{
+    final date = await pickDate(context);
+    if (date == null) return;
+
+    final time = await pickTime(context);
+    if (time == null) return;
+    setState(() {
+      dateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
+    });
+  }
+
+  String getText(){
+    if(dateTime == null){
+      return 'Select Date and Time';
+    } else {
+      return DateFormat('MM/dd/yyyy HH:mm').format(dateTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String resultString;
+    
+
     return Scaffold(
       body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          TextButton(
-            child: Text("Open"),
-            onPressed: () {
-              DateTimeRangePicker(
-                  startText: "From",
-                  endText: "To",
-                  doneText: "Yes",
-                  cancelText: "Cancel",
-                  interval: 5,
-                  initialStartTime: DateTime.now(),
-                  initialEndTime: DateTime.now().add(Duration(minutes: 30)),
-                  mode: DateTimeRangePickerMode.dateAndTime,
-                  minimumTime: DateTime.now().subtract(Duration(days: 5)),
-                  maximumTime: DateTime.now().add(Duration(days: 25)),
-                  use24hFormat: true,
-                  onConfirm: (start, end) {
-                    print(start);
-                    print(end);
-                  }).showPicker(context);
-            },
-          ),
-          Text(resultString ?? "")
-        ]),
+        child: Stack(
+            children: <Widget>[
+              TextButton(onPressed: () =>
+                  pickDateTime(context).then((value) =>
+                      print(dateTime)), child: Text(getText())),
+
+             Container(
+              child: Container(
+                decoration: const BoxDecoration(
+                 color: Colors.white,
+                ),
+                child:  TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(16.0),
+                    primary: Colors.black,
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {},
+                  child: Text('Gradient'),
+                ),
+              ),
+               alignment: Alignment(1,1),
+             ),
+
+
+            ]
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: ()async
         {
-          await getData().then((value) {
+        /*  await getData().then((value) {
             print(value);
-          });/*.whenComplete(() async{
+          });.whenComplete(() async{
             await decodeData();
           });*/
         },
@@ -83,3 +131,4 @@ class _TestGetState extends State<TestGet> {
     );
   }
 }
+

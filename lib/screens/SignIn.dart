@@ -49,9 +49,9 @@ class SignInBooking {
 class SignIn extends StatefulWidget {
 
   // passing parameters from booking time page
-  final String _time;
-  final String _time2;
-  SignIn(this._time,this._time2, {Key key}): super(key: key);
+  final DateTime StartTime;
+  final DateTime EndTime;
+  SignIn(this.StartTime,this.EndTime, {Key key}): super(key: key);
 
 
   @override
@@ -187,7 +187,7 @@ class _SignInState extends State<SignIn> {
                     Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BookingDetails(widget._time,widget._time2),
+                      builder: (context) => BookingDetails(widget.StartTime,widget.EndTime),
                     ),);
                   }
                 },

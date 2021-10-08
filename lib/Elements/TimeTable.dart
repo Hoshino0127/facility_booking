@@ -38,7 +38,7 @@ Future<List<Booking>> fetchBooking(http.Client client) async {
   return compute(parseBooking, response.body);
 }
 
-// A function that converts a response body into a List<Photo>.
+// A function that converts a response body into a List<Booking>.
 List<Booking> parseBooking(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
@@ -67,6 +67,7 @@ class Booking {
     );
   }
 
+
 }
 
 class TimeTable extends StatefulWidget {
@@ -77,6 +78,7 @@ class TimeTable extends StatefulWidget {
 class _TimeTableState extends State<TimeTable> {
   /*Future<Booking> futureBooking;*/
    List<Booking> booking;
+
 
   @override
   void initState() {
