@@ -44,11 +44,7 @@ var response = await http.post(Uri.parse(pathUrl),
   body: jsonEncode(body), // use jsonEncode()
 );
 
-if (response.statusCode == 200) {
-  print("${response.statusCode}");
-} else {
-  throw Exception('Failed to load album');
-}
+
   print("${response.statusCode}");
   print("${response.body}");
 }
