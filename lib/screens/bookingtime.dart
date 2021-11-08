@@ -53,7 +53,6 @@ class _BookingTimeState extends State<BookingTime> {
   Future pickStartTime(BuildContext context)async{
     final date = await pickDate(context);
     if (date == null) return;
-
     final time = await pickTime(context);
     if (time == null) return;
     setState(() {
@@ -64,6 +63,7 @@ class _BookingTimeState extends State<BookingTime> {
         time.hour,
         time.minute,
       );
+      return  DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(StartTime);
     });
   }
 
@@ -71,7 +71,6 @@ class _BookingTimeState extends State<BookingTime> {
   Future pickEndTime(BuildContext context)async{
     final date = await pickDate(context);
     if (date == null) return;
-
     final time = await pickTime(context);
     if (time == null) return;
     setState(() {
@@ -148,10 +147,19 @@ class _BookingTimeState extends State<BookingTime> {
           NullTimeDialog(context);
         }
         else{
+          final DateFormat formatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+          final String Starttime = formatter.format(StartTime);
+          print(Starttime);
+
+          final DateFormat formatter2 = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+          final String Endtime = formatter2.format(EndTime);
+          print(Endtime);
+
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SignIn(StartTime, EndTime),
+              builder: (context) => SignIn(Starttime, Endtime),
             ),);
         }
         },
@@ -181,8 +189,10 @@ class _BookingTimeState extends State<BookingTime> {
   final _formKey = GlobalKey<FormState>();
 
 
+
   @override
   Widget build(BuildContext context) {
+
 
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
@@ -363,17 +373,6 @@ class _BookingTimeState extends State<BookingTime> {
                     alignment: Alignment(-0.7, 0),
                   ),
 
-                /*  Container(
-                    child: Text(
-                        '-',
-                        style: new TextStyle(
-                            fontSize: 30,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold
-                        )
-                    ),
-                    alignment: Alignment(-0.28, -0.12),
-                  ),*/
 
 
                   // time table

@@ -1,16 +1,42 @@
+import 'package:facility_booking/ApiService/BookingModel.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
+import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../ApiService/ApiFunction.dart' as api;
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 class ReadyToStart extends StatefulWidget {
   @override
   _ReadyToStartState createState() => _ReadyToStartState();
+}
+
+Future<BookingModel> confirmBooking() async{
+  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/18/confirm';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
+  };
+
+  var body = {
+  "Stage": "Confirmed",
+};
+
+  var response = await http.patch(Uri.parse(pathUrl),
+    headers: headers,
+    body: jsonEncode(body), // use jsonEncode()
+
+  );
+
+  print("${response.statusCode}");
+  print("${response.body}");
 }
 
 class _ReadyToStartState extends State<ReadyToStart> {
@@ -20,6 +46,92 @@ class _ReadyToStartState extends State<ReadyToStart> {
     super.initState();
   }
 
+  BookingModel _confirmBook;
+
+  ConfirmBookingDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+        onPressed: () async {
+
+        BookingModel confirmBook = await confirmBooking();
+
+        setState(() {
+         _confirmBook = confirmBook;
+        });
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+           builder: (context) => SignInCancel(),
+           ),);
+       },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(" Confirm Booking?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  BookSession(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: ()  {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingTime(),
+          ),);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Do you want to book another session?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
 
@@ -28,7 +140,8 @@ class _ReadyToStartState extends State<ReadyToStart> {
      appBar: AppBar(
 
      ),
-      body: Center(
+      body: Form(
+        key: _formKey,
         child: Stack(
           children: <Widget>[
             // pending confirmation text
@@ -185,15 +298,13 @@ class _ReadyToStartState extends State<ReadyToStart> {
               alignment: Alignment(0, 0.4),
             ),
 
-            // book text
+            // book button
             Container(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignInCancel(),
-                    ),);
+                  if (_formKey.currentState.validate()) {
+                    BookSession(context);
+                  }
                 },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),
@@ -214,10 +325,14 @@ class _ReadyToStartState extends State<ReadyToStart> {
               alignment: Alignment(-0.3, 0.6),
             ),
 
-            // confirm to start text
+            // confirm to start button
             Container(
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    ConfirmBookingDialog(context);
+                  }
+                },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),
                 shape: RoundedRectangleBorder(

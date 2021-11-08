@@ -1,22 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_format/date_format.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-var _currencies = [
-  "Food",
-  "Transport",
-  "Personal",
-  "Shopping",
-  "Medical",
-  "Rent",
-  "Movie",
-  "Salary"
+var _location = [
+  "Malaysia.Block A.Level 1.Workspace 1",
 ];
 var _BufferTime = [
   "15 Minutes",
@@ -27,6 +25,7 @@ var _BookingSlot = [
   "30 Minutes",
   "1 Hour",
 ];
+
 
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -54,6 +53,44 @@ class _SettingsPageState extends State<SettingsPage> {
 
   TextEditingController _timeController = TextEditingController();
   TextEditingController _time2Controller = TextEditingController();
+
+ /* List<dynamic> location = List();
+  String LocationKey;
+
+  void Location() async{
+    var res = await http.get(
+     ('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1'),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+      },
+    );
+    var resbody = jsonDecode(res.body);
+  setState(() {
+    location = resbody;
+  });
+  }
+*/
+  //country
+  List location_data = List();
+  String locationid;                                 //default id for the dropdown
+  //its null for me you can copy an id from api and place here it will be seen....
+  Future<dynamic> location() async {
+    var res = await http.get(
+        Uri.encodeFull ('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings'),
+        headers: {
+          "Accept": "application/json",
+          HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
+        }); //if you have any auth key place here...properly..
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      location_data = resBody;
+    });
+
+    print(resBody);
+    return "Sucess";
+  }
 
 
   Future<Null> _selectTime(BuildContext context) async {
@@ -105,6 +142,11 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
+  void initState3(){
+    super.initState();
+   this.location();
+  }
+
   Widget build(BuildContext context) {
 
     _height = MediaQuery.of(context).size.height;
@@ -154,7 +196,11 @@ class _SettingsPageState extends State<SettingsPage> {
                           state.didChange(newValue);
                         });
                       },
-                      items: _currencies.map((String value) {
+                      /*items: location_data.map((item) {
+                        return DropdownMenuItem<String>(
+                          child: Text(item['LocationFullName'],),
+                          value: item['LocationKey'],*/
+                      items: _location.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -390,7 +436,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
               child: RaisedButton(
                 onPressed: () {
-
+                print(location_data);
                 },
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),

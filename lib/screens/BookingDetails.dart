@@ -9,29 +9,33 @@ import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
+
 class BookingDetails extends StatefulWidget {
-  final DateTime StartTime;
-  final DateTime EndTime;
-  BookingDetails(this.StartTime,this.EndTime, {Key key}): super(key: key);
+  final String Starttime;
+  final String Endtime;
+  BookingDetails(this.Starttime,this.Endtime, {Key key}): super(key: key);
+
 
   @override
   _BookingDetailsState createState() => _BookingDetailsState();
 }
 
 
-Future<BookingModel> createBooking(String Hostname, /*String StartTime, String EndTime, */String Details )async {
+Future<BookingModel> createBooking (String Hostname, String Starttime, String Endtime, String Details )async {
 
 final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
 
 var headers = {
   'Content-Type': 'application/json',
-  HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+  HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
 };
+
 
 var body = {
   "LocationKey": "23",
-  "StartDateTime" : "2021-10-27T10:30:00Z",
-  "EndDateTime": "2021-10-27T11:00:00Z",
+  "StartDateTime" : Starttime,
+  "EndDateTime": Endtime,
   "Purpose": Details,
   "HostObjectKey": "1",
   "HostObjectType": "Organization.OrgStaff",
@@ -42,11 +46,13 @@ var body = {
 var response = await http.post(Uri.parse(pathUrl),
   headers: headers,
   body: jsonEncode(body), // use jsonEncode()
+
 );
 
 
   print("${response.statusCode}");
   print("${response.body}");
+
 }
 
 
@@ -62,6 +68,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
 
   @override
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +141,7 @@ class _BookingDetailsState extends State<BookingDetails> {
               alignment: Alignment(-0.8, -0.4),
             ),
 
-            //
+            // Booking Details
             Container(
               padding:  EdgeInsets.fromLTRB(180, 12, 670, 12),
               child: TextFormField(
@@ -163,10 +170,10 @@ class _BookingDetailsState extends State<BookingDetails> {
                   if (_formKey.currentState.validate()) {
                    final String Hostname = HostController.text;
                    final String Details = DetailsController.text;
-                  /* final String StartTime = widget.StartTime;
-                   final String EndTime = widget.EndTime;*/
+                   final String Starttime = widget.Starttime;
+                   final String Endtime = widget.Endtime;
 
-                   BookingModel booking = await createBooking(Hostname, Details);
+                   BookingModel booking = await createBooking(Hostname, Starttime, Endtime ,Details);
 
                    setState(() {
                      _booking = booking;
