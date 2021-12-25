@@ -9,55 +9,99 @@ import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class BookingDetails extends StatefulWidget {
   final String Starttime;
   final String Endtime;
-  BookingDetails(this.Starttime,this.Endtime, {Key key}): super(key: key);
-
+  BookingDetails(this.Starttime, this.Endtime, {Key key}) : super(key: key);
 
   @override
   _BookingDetailsState createState() => _BookingDetailsState();
 }
 
-
-Future<BookingModel> createBooking (String Hostname, String Starttime, String Endtime, String Details )async {
-
-final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
-
-var headers = {
-  'Content-Type': 'application/json',
-  HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
-};
-
-
-var body = {
-  "LocationKey": "23",
-  "StartDateTime" : Starttime,
-  "EndDateTime": Endtime,
-  "Purpose": Details,
-  "HostObjectKey": "1",
-  "HostObjectType": "Organization.OrgStaff",
-  "HostUserFullName": Hostname,
-
-};
-
-var response = await http.post(Uri.parse(pathUrl),
-  headers: headers,
-  body: jsonEncode(body), // use jsonEncode()
-
-);
-
-
-  print("${response.statusCode}");
-  print("${response.body}");
-
-}
-
-
-
 class _BookingDetailsState extends State<BookingDetails> {
+
+  Future<BookingModel> createBooking(
+     context, String Hostname, String Starttime, String Endtime, String Details) async {
+    final String pathUrl =
+        'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+    };
+
+    var body = {
+      "LocationKey": "23",
+      "StartDateTime": Starttime,
+      "EndDateTime": Endtime,
+      "Purpose": Details,
+      "HostObjectKey": "1",
+      "HostObjectType": "Organization.OrgStaff",
+      "HostUserFullName": Hostname,
+    };
+
+    var response = await http.post(
+      Uri.parse(pathUrl),
+      headers: headers,
+      body: jsonEncode(body), // use jsonEncode()
+    );
+
+    print("${response.statusCode}");
+    print("${response.body}");
+
+    if (response.statusCode != 200) {
+      _errorlogin(context, response);
+    } else {
+      _successfullogin(context);
+    }
+  }
+  void _errorlogin(BuildContext context, response ) {
+    final alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("${response.body}"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _successfullogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Successful"),
+      content: Text("A booking has been created"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ReadyToStart(),
+                ),
+              );
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   TextEditingController HostController = TextEditingController();
   TextEditingController DetailsController = TextEditingController();
@@ -66,45 +110,36 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   BookingModel _booking;
 
-
   @override
-
-
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-
-      ),
+      appBar: AppBar(),
       body: Form(
         key: _formKey,
         child: Stack(
           children: <Widget>[
-
             // available text
             Container(
-              child: Text(
-                  'AVAILABLE',
+              child: Text('AVAILABLE',
                   style: new TextStyle(
                       fontSize: 60,
                       color: Colors.blue,
-                      fontWeight: FontWeight.bold
-                  )
-              ),
-              alignment: Alignment(-0.5, -0.7),
+                      fontWeight: FontWeight.bold)),
+              alignment: Alignment(-0.5, -0.8),
             ),
-
 
             // center box
             Container(
               child: Container(
                 margin: EdgeInsets.all(20),
-                height: 500,
+                height: 450,
                 width: 500,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), //border corner radius
-                  boxShadow:[
+                  borderRadius:
+                      BorderRadius.circular(30), //border corner radius
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.white.withOpacity(0.5), //color of shadow
                       spreadRadius: 5, //spread radius
@@ -143,7 +178,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
             // Booking Details
             Container(
-              padding:  EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
               child: TextFormField(
                 controller: DetailsController,
                 maxLines: 10,
@@ -160,33 +195,29 @@ class _BookingDetailsState extends State<BookingDetails> {
                   return null;
                 },
               ),
-              alignment: Alignment(-0.8, 0.1),
+              alignment: Alignment(-0.8, 0.2),
             ),
 
             // submit button
             Container(
               child: RaisedButton(
-                onPressed: ()async {
+                onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                   final String Hostname = HostController.text;
-                   final String Details = DetailsController.text;
-                   final String Starttime = widget.Starttime;
-                   final String Endtime = widget.Endtime;
+                    final String Hostname = HostController.text;
+                    final String Details = DetailsController.text;
+                    final String Starttime = widget.Starttime;
+                    final String Endtime = widget.Endtime;
 
-                   BookingModel booking = await createBooking(Hostname, Starttime, Endtime ,Details);
+                    BookingModel booking = await createBooking(
+                       context, Hostname, Starttime, Endtime, Details);
 
-                   setState(() {
-                     _booking = booking;
-                   });
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ReadyToStart(),
-                      ),);
+                    setState(() {
+                      _booking = booking;
+                    });
                   }
                 },
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
@@ -201,17 +232,15 @@ class _BookingDetailsState extends State<BookingDetails> {
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.6, 0.55),
+              alignment: Alignment(-0.6, 0.65),
             ),
 
             // cancel button
             Container(
               child: RaisedButton(
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
@@ -226,9 +255,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                   child: const Text('Cancel', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.25, 0.55),
+              alignment: Alignment(-0.25, 0.65),
             ),
-
 
             // time table
             Container(
@@ -239,19 +267,19 @@ class _BookingDetailsState extends State<BookingDetails> {
             // Settings icon
             Container(
               child: Settings(),
-              alignment: Alignment(-1,-  1),
+              alignment: Alignment(-1, -1),
             ),
 
             //info
             Container(
               child: Info(),
-              alignment: Alignment(1,-0.5),
+              alignment: Alignment(1, -0.5),
             ),
 
             // time and date
             Container(
               child: TimeDate(),
-              alignment: Alignment(1,-1),
+              alignment: Alignment(1, -1),
             ),
           ],
         ),

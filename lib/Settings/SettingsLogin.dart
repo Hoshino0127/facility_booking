@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:facility_booking/Settings/SettingsPage.dart';
+import 'package:facility_booking/model/SignInModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class SettingsLogin extends StatefulWidget {
   @override
@@ -9,9 +15,89 @@ class SettingsLogin extends StatefulWidget {
 
 class _SettingsLoginState extends State<SettingsLogin> {
 
+  Future<SignInModel> SignInUser(
+      String Username, String Password, context) async {
+    final String pathUrl =
+        'https://bobtest.optergykl.ga/hook/user/v1/authenticate';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+    };
+
+    var body = {
+      "LoginID": "Xenber",
+      "Password": "aN2TJ2qJEF",
+    };
+
+    var response = await http.post(
+      Uri.parse(pathUrl),
+      headers: headers,
+      body: jsonEncode(body), // use jsonEncode()
+    );
+
+    print("${response.statusCode}");
+    print("${response.body}");
+
+    if (response.statusCode != 200) {
+      _errorlogin(context);
+    } else {
+      _successfullogin(context);
+    }
+  }
+
+  void _errorlogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("Invalid username or password."),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _successfullogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Successful"),
+      content: Text("Successful login"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(),
+                ),
+              );
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  SignInModel _signIn;
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +202,30 @@ class _SettingsLoginState extends State<SettingsLogin> {
                  // Confirm Button
                  Container(
                    child: RaisedButton(
-                     onPressed: () {
-                       if (_formKey.currentState.validate()) {
-                         Navigator.push(
-                           context,
-                           MaterialPageRoute(
-                             builder: (context) => SettingsPage(),
-                           ),);
-                       }
+                     onPressed: () async {
+
+                         final String Username = UsernameController.text;
+                         final String Password = PasswordController.text;
+
+                         SignInModel signin =
+                             await SignInUser(Username, Password, context);
+
+                         setState(() {
+                           _signIn = signin;
+                         });
+                         if (_formKey.currentState.validate()) {
+                           final String Username = UsernameController.text;
+                           final String Password = PasswordController.text;
+
+                           SignInModel signin =
+                               await SignInUser(Username, Password, context);
+
+                           setState(() {
+                             _signIn = signin;
+                           });
+                         }
                        },
+
                      textColor: Colors.white,
                      padding : EdgeInsets.fromLTRB(0,0,0,0),
                      shape: RoundedRectangleBorder(

@@ -1,5 +1,7 @@
 import 'dart:io';
-
+import 'package:facility_booking/Database/SettingsDB.dart';
+import 'package:facility_booking/main.dart';
+import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +16,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 var _location = [
-  "Malaysia.Block A.Level 1.Workspace 1",
+  "23",
 ];
 var _BufferTime = [
   "15 Minutes",
@@ -25,8 +27,6 @@ var _BookingSlot = [
   "30 Minutes",
   "1 Hour",
 ];
-
-
 
 class _SettingsPageState extends State<SettingsPage> {
   var _currentSelectedValue;
@@ -50,48 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   TimeOfDay selectedTime2 = TimeOfDay(hour: 00, minute: 00);
 
-
   TextEditingController _timeController = TextEditingController();
   TextEditingController _time2Controller = TextEditingController();
-
- /* List<dynamic> location = List();
-  String LocationKey;
-
-  void Location() async{
-    var res = await http.get(
-     ('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1'),
-      // Send authorization headers to the backend.
-      headers: {
-        HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
-      },
-    );
-    var resbody = jsonDecode(res.body);
-  setState(() {
-    location = resbody;
-  });
-  }
-*/
-  //country
-  List location_data = List();
-  String locationid;                                 //default id for the dropdown
-  //its null for me you can copy an id from api and place here it will be seen....
-  Future<dynamic> location() async {
-    var res = await http.get(
-        Uri.encodeFull ('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings'),
-        headers: {
-          "Accept": "application/json",
-          HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
-        }); //if you have any auth key place here...properly..
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      location_data = resBody;
-    });
-
-    print(resBody);
-    return "Sucess";
-  }
-
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
@@ -110,6 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
             [hh, ':', nn, " ", am]).toString();
       });
   }
+
   Future<Null> _selectTime2(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
       context: context,
@@ -135,6 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
         [hh, ':', nn, " ", am]).toString();
     super.initState();
   }
+
   void initState2() {
     _time2Controller.text = formatDate(
         DateTime(2019, 08, 1, DateTime.now().hour, DateTime.now().minute),
@@ -142,13 +104,11 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
-  void initState3(){
+  void initState3() {
     super.initState();
-   this.location();
   }
 
   Widget build(BuildContext context) {
-
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
@@ -156,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title:  Text(
+        title: Text(
           'SETTINGS',
           style: new TextStyle(
             fontSize: 25,
@@ -164,19 +124,18 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       ),
-
       body: Center(
           child: Stack(
-          children: <Widget>[
-
-            Container(
-              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
-              child: FormField<String>(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
+            child: FormField<String>(
               builder: (FormFieldState<String> state) {
                 return InputDecorator(
                   decoration: InputDecoration(
-                      errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                      enabledBorder: OutlineInputBorder(
+                    errorStyle:
+                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                    enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.blue,
                         width: 2.0,
@@ -196,10 +155,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           state.didChange(newValue);
                         });
                       },
-                      /*items: location_data.map((item) {
-                        return DropdownMenuItem<String>(
-                          child: Text(item['LocationFullName'],),
-                          value: item['LocationKey'],*/
                       items: _location.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -210,257 +165,261 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 );
               },
-              ),
-              alignment: Alignment(0, -0.8),
             ),
+            alignment: Alignment(0, -0.8),
+          ),
 
-            Container(
-              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
-              child: FormField<String>(
-                builder: (FormFieldState<String> state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                        errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Please select expense',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue,
-                          width: 2.0,
-                        ),
-                      ),
-                        labelText: 'Buffer Time To Start Meeting',
-                    ),
-                    isEmpty: _currentSelectedTime == '',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _currentSelectedTime,
-                        isDense: true,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            _currentSelectedTime = newValue;
-                            state.didChange(newValue);
-                          });
-                        },
-                        items: _BufferTime.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+          Container(
+            padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
+            child: FormField<String>(
+              builder: (FormFieldState<String> state) {
+                return InputDecorator(
+                  decoration: InputDecoration(
+                    errorStyle:
+                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                    hintText: 'Please select expense',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                        width: 2.0,
                       ),
                     ),
-                  );
-                },
-              ),
-              alignment: Alignment(0, -0.5),
+                    labelText: 'Buffer Time To Start Meeting',
+                  ),
+                  isEmpty: _currentSelectedTime == '',
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _currentSelectedTime,
+                      isDense: true,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _currentSelectedTime = newValue;
+                          state.didChange(newValue);
+                        });
+                      },
+                      items: _BufferTime.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
+            alignment: Alignment(0, -0.5),
+          ),
 
-            Container(
-              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
-              child: FormField<String>(
-                builder: (FormFieldState<String> state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                      errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                      hintText: 'Please select expense',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue,
-                          width: 2.0,
-                        ),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: 'Booking Slot',
-                    ),
-                    isEmpty: _currentSelectedBooking == '',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _currentSelectedBooking,
-                        isDense: true,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            _currentSelectedBooking = newValue;
-                            state.didChange(newValue);
-                          });
-                        },
-                        items: _BookingSlot.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+          Container(
+            padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
+            child: FormField<String>(
+              builder: (FormFieldState<String> state) {
+                return InputDecorator(
+                  decoration: InputDecoration(
+                    errorStyle:
+                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                    hintText: 'Please select expense',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                        width: 2.0,
                       ),
                     ),
-                  );
-                },
-              ),
-              alignment: Alignment(0, -0.2),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelText: 'Booking Slot',
+                  ),
+                  isEmpty: _currentSelectedBooking == '',
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _currentSelectedBooking,
+                      isDense: true,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _currentSelectedBooking = newValue;
+                          state.didChange(newValue);
+                        });
+                      },
+                      items: _BookingSlot.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
+            alignment: Alignment(0, -0.2),
+          ),
 
-         /*   Container(
+          /*   Container(
               padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
             ),
 
 */
-            Container(
+          Container(
+            child: Container(
+              margin: EdgeInsets.all(20),
+              height: 100,
+              width: 500,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(30), //border corner radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.5), //color of shadow
+                    spreadRadius: 5, //spread radius
+                    blurRadius: 7, // blur radius
+                    offset: Offset(0, 2), // changes position of shadow
+                    //first paramerter of offset is left-right
+                    //second parameter is top to down
+                  ),
+                  //you can set more BoxShadow() here
+                ],
+              ),
+            ),
+            alignment: Alignment(0, 0.2),
+          ),
+
+          //time 1
+          Container(
+            child: InkWell(
+              onTap: () {
+                _selectTime(context);
+              },
               child: Container(
-                margin: EdgeInsets.all(20),
-                height: 100,
-                width: 500,
+                width: _width / 8,
+                height: _height / 10,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: Colors.grey[200]),
+                child: TextFormField(
+                  style: TextStyle(fontSize: 30),
+                  textAlign: TextAlign.center,
+                  onSaved: (String val) {
+                    _setTime = val;
+                  },
+                  enabled: false,
+                  keyboardType: TextInputType.text,
+                  controller: _timeController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelText: 'Start',
+                  ),
+                ),
+              ),
+            ),
+            alignment: Alignment(-0.02, 0.18),
+          ),
+
+          // time 2
+          Container(
+            child: InkWell(
+              onTap: () {
+                _selectTime2(context);
+              },
+              child: Container(
+                width: _width / 8,
+                height: _height / 10,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: Colors.grey[200]),
+                child: TextFormField(
+                  style: TextStyle(fontSize: 30),
+                  textAlign: TextAlign.center,
+                  onSaved: (String val2) {
+                    _setTime2 = val2;
+                  },
+                  enabled: false,
+                  keyboardType: TextInputType.text,
+                  controller: _time2Controller,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelText: 'End',
+                  ),
+                ),
+              ),
+            ),
+            alignment: Alignment(0.29, 0.18),
+          ),
+
+          Container(
+            child: Text(
+              'Room Operating \n Time',
+              style: new TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            alignment: Alignment(-0.3, 0.18),
+          ),
+
+          // Confirm Button
+          Container(
+            child: RaisedButton(
+              onPressed: () async {
+                final String LKey = _currentSelectedValue;
+                final String EndTime =  _time2Controller.text;
+                final String BufferTime = _currentSelectedTime;
+                final String BookingSlot = _currentSelectedBooking;
+                var settings = Settings(id: 0, Lkey: LKey, EndTime: EndTime, BufferTime: BufferTime, BookingSlot: BookingSlot);
+                DbManager.db.insertLKey(settings);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              },
+              textColor: Colors.white,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),
+              ),
+              child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), //border corner radius
-                  boxShadow:[
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.5),//color of shadow
-                      spreadRadius: 5, //spread radius
-                      blurRadius: 7, // blur radius
-                      offset: Offset(0, 2), // changes position of shadow
-                      //first paramerter of offset is left-right
-                      //second parameter is top to down
-                    ),
-                    //you can set more BoxShadow() here
-                  ],
-                ),
-              ),
-              alignment: Alignment(0, 0.2),
-            ),
-
-            //time 1
-            Container(
-              child: InkWell(
-                onTap: () {
-                  _selectTime(context);
-                },
-                child: Container(
-
-                  width: _width / 8,
-                  height: _height / 10,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: Colors.grey[200]),
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 30),
-                    textAlign: TextAlign.center,
-                    onSaved: (String val) {
-                      _setTime = val;
-                    },
-                    enabled: false,
-                    keyboardType: TextInputType.text,
-                    controller: _timeController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: 'Start',
-                    ),
+                  borderRadius: BorderRadius.circular(18),
+                  gradient: LinearGradient(
+                    colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
                   ),
                 ),
+                padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                child: const Text('Submit', style: TextStyle(fontSize: 20)),
               ),
-              alignment: Alignment(-0.02, 0.18),
             ),
+            alignment: Alignment(-0.2, 0.5),
+          ),
 
-
-            // time 2
-            Container(
-              child: InkWell(
-                onTap: () {
-                  _selectTime2(context);
-                },
-                child: Container(
-
-                  width: _width / 8,
-                  height: _height / 10,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: Colors.grey[200]),
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 30),
-                    textAlign: TextAlign.center,
-                    onSaved: (String val2) {
-                      _setTime2 = val2;
-                    },
-                    enabled: false,
-                    keyboardType: TextInputType.text,
-                    controller: _time2Controller,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: 'End',
-                    ),
+          //cancel button
+          Container(
+            child: RaisedButton(
+              onPressed: () {
+              },
+              textColor: Colors.white,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  gradient: LinearGradient(
+                    colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
                   ),
                 ),
+                padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                child: const Text('Cancel', style: TextStyle(fontSize: 20)),
               ),
-              alignment: Alignment(0.29, 0.18),
             ),
-
-            Container(
-              child: Text(
-                  'Room Operating \n Time',
-                  style: new TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  ),
-                textAlign: TextAlign.center,
-              ),
-              alignment: Alignment(-0.3, 0.18),
-            ),
-
-            // Confirm Button
-            Container(
-              child: RaisedButton(
-                onPressed: () {
-                },
-                textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(18.0),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                  child: const Text('Submit', style: TextStyle(fontSize: 20)),
-                ),
-              ),
-              alignment: Alignment(-0.2, 0.5),
-            ),
-
-            //cancel button
-            Container(
-              child: RaisedButton(
-                onPressed: () {
-                print(location_data);
-                },
-                textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(18.0),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
-                    ),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                  child: const Text('Cancel', style: TextStyle(fontSize: 20)),
-                ),
-              ),
-              alignment: Alignment(0.2, 0.5),
-            ),
-
-          ],
-          )
-
-      ),
+            alignment: Alignment(0.2, 0.5),
+          ),
+        ],
+      )),
     );
   }
 }

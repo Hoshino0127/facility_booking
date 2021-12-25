@@ -16,7 +16,7 @@ Future<Booking> fetchBooking() async {
     Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/7'),
     // Send authorization headers to the backend.
     headers: {
-      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+      HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
     },
   );
 
@@ -80,7 +80,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<Booking> futureBooking;
-
 
   @override
   void initState() {

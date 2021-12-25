@@ -18,7 +18,7 @@ class ReadyToStart extends StatefulWidget {
 }
 
 Future<BookingModel> confirmBooking() async{
-  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/18/confirm';
+  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/899/confirm';
 
   var headers = {
     'Content-Type': 'application/json',
