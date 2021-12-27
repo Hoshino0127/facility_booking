@@ -11,8 +11,8 @@ import 'dart:convert';
 
 
 
-Future<List<Settings>> getLkeyFromDB() async {
-  Future<List<Settings>> key = DbManager.db.getSettings();
+Future<List<Setting>> getLkeyFromDB() async {
+  Future<List<Setting>> key = DbManager.db.getSettings();
   return key;
 }
 
@@ -20,7 +20,7 @@ Future<List<Settings>> getLkeyFromDB() async {
 Future<Locations> fetchLocation() async {
 
   String Lkey = "23";
-  FutureBuilder<List<Settings>>(
+  FutureBuilder<List<Setting>>(
       future: getLkeyFromDB(),
       builder: (context, snapshot) {
         if (snapshot.data != null) {

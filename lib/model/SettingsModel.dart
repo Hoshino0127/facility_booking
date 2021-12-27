@@ -1,4 +1,4 @@
-class Settings {
+class Setting {
   final int id;
   final String Lkey;
   final String EndTime;
@@ -7,7 +7,7 @@ class Settings {
 
 
 
-  Settings({
+  Setting({
     this.id,
     this.Lkey,
     this.EndTime,
@@ -31,6 +31,6 @@ class Settings {
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'LocationKey{id: $id, Lkey : $Lkey, EndTime: $EndTime, BufferTime: $BufferTime, BookingSlot: $BookingSlot}';
+    return 'LocationKey{id: $id, Lkey : $Lkey, EndTime: $EndTime, BufferTime: $BufferTime, BookingSlot: $BookingSlot';
   }
 }

@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-Future<List<Settings>> getLkeyFromDB() async {
-  Future<List<Settings>> key = DbManager.db.getSettings();
+Future<List<Setting>> getLkeyFromDB() async {
+  Future<List<Setting>> key = DbManager.db.getSettings();
   return key;
 }
 
@@ -17,7 +17,7 @@ Future<List<Settings>> getLkeyFromDB() async {
 Future<Booking> fetchBooking() async {
 
 
-  FutureBuilder<List<Settings>>(
+  FutureBuilder<List<Setting>>(
       future: getLkeyFromDB(),
       builder: (context, snapshot) {
         if (snapshot.data != null) {

@@ -28,7 +28,7 @@ class DbManager {
         int version,
       ) async {
         await db.execute(
-            "CREATE TABLE SettingsPage(id INTEGER PRIMARY KEY autoincrement, "
+            "CREATE TABLE SettingsPage(id INTEGER PRIMARY KEY, "
             "Lkey TEXT, "
             "EndTime TEXT,"
             "BufferTime TEXT,"
@@ -39,7 +39,7 @@ class DbManager {
     return database;
   }
 
-  Future<void> insertLKey(Settings Settings) async {
+  Future<void> insertLKey(Setting Settings) async {
 
     final db = await database;
     await db.insert(
@@ -50,11 +50,11 @@ class DbManager {
     print(await Settings);
   }
 
-  Future<List<Settings>> getSettings() async {
+  Future<List<Setting>> getSettings() async {
     await openDb();
     final List<Map<String, dynamic>> maps = await _database.query('SettingsPage');
     return List.generate(maps.length, (i) {
-      return Settings(
+      return Setting(
         id: maps[0]['id'],
         Lkey: maps[0]['Lkey'],
         EndTime: maps[0]['EndTime'],
