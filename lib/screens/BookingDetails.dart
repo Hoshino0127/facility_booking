@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:facility_booking/ApiService/BookingModel.dart';
+import 'package:facility_booking/Database/SettingsDB.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,8 +22,13 @@ class BookingDetails extends StatefulWidget {
 
 class _BookingDetailsState extends State<BookingDetails> {
 
+  Future<List<Setting>> getSettings() async {
+    Future<List<Setting>> key = DbManager.db.getSettings();
+    return key;
+  }
+
   Future<BookingModel> createBooking(
-     context, String Hostname, String Starttime, String Endtime, String Details) async {
+     context, String Hostname, String Starttime, String Endtime, String Details, String Lkey) async {
     final String pathUrl =
         'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
 
@@ -31,7 +38,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     };
 
     var body = {
-      "LocationKey": "23",
+      "LocationKey": Lkey,
       "StartDateTime": Starttime,
       "EndDateTime": Endtime,
       "Purpose": Details,
@@ -109,7 +116,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   final _formKey = GlobalKey<FormState>();
 
   BookingModel _booking;
-
+  static String Lkey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,6 +135,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                       fontWeight: FontWeight.bold)),
               alignment: Alignment(-0.5, -0.8),
             ),
+
+            FutureBuilder<List<Setting>>(
+                future: getSettings(),
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    if (snapshot.hasData) {
+                      Lkey = snapshot.data[0].Lkey;
+                      print(Lkey);
+                      return Text(
+                        Lkey,
+                        style: TextStyle(color: Colors.white),
+                      );
+                    }
+                  }
+                  return Container(
+                    alignment: AlignmentDirectional.center,
+                    child: CircularProgressIndicator(),
+                  );
+                }),
 
             // center box
             Container(
@@ -202,6 +228,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
+                  /*
                   if (_formKey.currentState.validate()) {
                     final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
@@ -209,12 +236,21 @@ class _BookingDetailsState extends State<BookingDetails> {
                     final String Endtime = widget.Endtime;
 
                     BookingModel booking = await createBooking(
-                       context, Hostname, Starttime, Endtime, Details);
+                       context, Hostname, Starttime, Endtime, Details, Lkey);
 
                     setState(() {
                       _booking = booking;
                     });
                   }
+                   */
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ReadyToStart(),
+                    ),
+                  );
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

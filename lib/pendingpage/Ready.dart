@@ -60,12 +60,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
     Widget continueButton = TextButton(
       child: Text("Continue"),
         onPressed: () async {
-
+        /*
         BookingModel confirmBook = await confirmBooking();
 
         setState(() {
          _confirmBook = confirmBook;
-        });
+        });*/
         Navigator.push(
         context,
         MaterialPageRoute(

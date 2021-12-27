@@ -12,10 +12,11 @@ import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/Database/SettingsDB.dart';
 
-Future<Booking> fetchBooking() async {
+import 'model/LocationModel.dart';
+
+Future<Locations> fetchLocation() async {
   final response = await http.get(
-    Uri.parse(
-        'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/7'),
+    Uri.parse('https://bobtest.optergykl.ga/lucy/location/v1/locations/23'),
     // Send authorization headers to the backend.
     headers: {
       HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -25,35 +26,16 @@ Future<Booking> fetchBooking() async {
   // Appropriate action depending upon the
   // server response
   if (response.statusCode == 200) {
-    return Booking.fromJson(json.decode(response.body));
+    return Locations.fromJson(json.decode(response.body));
   } else {
     throw Exception('Failed to load album');
-  }
-}
-
-class Booking {
-  final String FacilityID;
-  final String Starttime;
-  final String Endtime;
-
-  Booking({this.FacilityID, this.Starttime, this.Endtime});
-
-  factory Booking.fromJson(Map<String, dynamic> json) {
-    return Booking(
-      FacilityID: json['FacilityID'],
-      Starttime: json['StartDateTime'],
-      Endtime: json['EndDateTime'],
-    );
   }
 }
 
 Future<List<Setting>> getSettings() async {
   Future<List<Setting>> key = DbManager.db.getSettings();
   return key;
-
 }
-
-
 
 void main() {
   runApp(MyApp());
@@ -79,17 +61,17 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  Future<Booking> futureBooking;
-  String EndTime;
 
+
+class _MyHomePageState extends State<MyHomePage> {
+  Future<Locations> futureLocation;
+  String EndTime;
 
   @override
   void initState() {
     super.initState();
-    futureBooking = fetchBooking();
+    futureLocation = fetchLocation();
   }
- @override
 
   @override
   Widget build(BuildContext context) {
@@ -109,16 +91,15 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment(0, -0.5),
         ),
 
-
         Container(
           margin: EdgeInsets.only(right: 300.0),
           width: double.infinity,
-          child: FutureBuilder<Booking>(
-            future: futureBooking,
+          child: FutureBuilder<Locations>(
+            future: futureLocation,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Text(
-                  snapshot.data.FacilityID,
+                  snapshot.data.description,
                   style: new TextStyle(
                       fontSize: 60,
                       color: Colors.blue,
@@ -134,19 +115,38 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           alignment: Alignment(0, -0.3),
         ),
-
-        Container(
-
-          margin: EdgeInsets.only(right: 300.0),
-          width: double.infinity,
-          child: Text(
-            'Available Until $EndTime',
-            style: new TextStyle(
-                fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          alignment: Alignment(0, -0.1),
-        ),
+        FutureBuilder<List<Setting>>(
+            future: getSettings(),
+            builder: (context, snapshot) {
+              if (snapshot.data != null) {
+                if (snapshot.hasData) {
+                  EndTime = snapshot.data[0].EndTime;
+                  print(EndTime);
+                  return Container(
+                    margin: EdgeInsets.only(right: 300.0),
+                    width: double.infinity,
+                    child: Text(
+                      'Available Until $EndTime',
+                      style: new TextStyle(
+                          fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    alignment: Alignment(0, -0.1),
+                  );
+                }
+              }
+              return Container(
+                margin: EdgeInsets.only(right: 300.0),
+                width: double.infinity,
+                child: Text(
+                  'Available Until Null',
+                  style: new TextStyle(
+                      fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                alignment: Alignment(0, -0.1),
+              );
+            }),
         Container(
           margin: EdgeInsets.only(right: 300.0),
           width: double.infinity,

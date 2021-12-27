@@ -1,13 +1,15 @@
+import 'dart:io';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/model/SignInModel.dart';
 import 'package:facility_booking/pendingpage/CancelBooking.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class SignInCancel extends StatefulWidget {
   @override
@@ -15,6 +17,87 @@ class SignInCancel extends StatefulWidget {
 }
 
 class _SignInCancelState extends State<SignInCancel> {
+
+  Future<SignInModel> SignInUser(
+      String Username, String Password, context) async {
+    final String pathUrl =
+        'https://bobtest.optergykl.ga/hook/user/v1/authenticate';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+    };
+
+    var body = {
+      "LoginID": "Xenber",
+      "Password": "aN2TJ2qJEF",
+    };
+
+    var response = await http.post(
+      Uri.parse(pathUrl),
+      headers: headers,
+      body: jsonEncode(body), // use jsonEncode()
+    );
+
+    print("${response.statusCode}");
+    print("${response.body}");
+
+    if (response.statusCode != 200) {
+      _errorlogin(context);
+    } else {
+      _successfullogin(context);
+    }
+  }
+
+  void _errorlogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("Invalid username or password."),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _successfullogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Successful"),
+      content: Text("Successful login"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                     CancelBooking(),
+                ),
+              );
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  SignInModel _signIn;
 
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
@@ -130,8 +213,19 @@ class _SignInCancelState extends State<SignInCancel> {
             // submit button
             Container(
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState.validate()) {
+                    /*
+                    final String Username = UsernameController.text;
+                    final String Password = PasswordController.text;
+
+                    SignInModel signin =
+                        await SignInUser(Username, Password, context);
+
+                    setState(() {
+                      _signIn = signin;
+                    });
+                  }*/
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -155,7 +249,7 @@ class _SignInCancelState extends State<SignInCancel> {
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.2, 0.3),
+              alignment: Alignment(-0.2, 0.35),
             ),
 
 

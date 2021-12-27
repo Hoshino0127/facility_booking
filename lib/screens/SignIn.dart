@@ -11,40 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-/*
-// POST REQUEST TO SIGN IN
-Future<SignInBooking> createBooking(String username) async {
-  final http.Response response = await http.post(
-    'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
-    },
-    body: jsonEncode(<String, String>{
-      'CreatedUserFullName': username,
-    }),
-  );
-
-  if (response.statusCode == 201) {
-    return SignInBooking.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to create album.');
-  }
-}
-
-
-class SignInBooking {
-
-  final String username;
-
-  SignInBooking({this.username});
-
-  factory SignInBooking.fromJson(Map<String, dynamic> json) {
-    return SignInBooking(
-      username: json['CreatedUserFullName'],
-    );
-  }
-}*/
 
 class SignIn extends StatefulWidget {
   // passing parameters from booking time page
@@ -243,15 +209,7 @@ class _SignInState extends State<SignIn> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-                  final String Username = UsernameController.text;
-                  final String Password = PasswordController.text;
-
-                  SignInModel signin =
-                      await SignInUser(Username, Password, context);
-
-                  setState(() {
-                    _signIn = signin;
-                  });
+                 /*
                   if (_formKey.currentState.validate()) {
                     final String Username = UsernameController.text;
                     final String Password = PasswordController.text;
@@ -263,6 +221,14 @@ class _SignInState extends State<SignIn> {
                       _signIn = signin;
                     });
                   }
+                  */
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BookingDetails(widget.Starttime, widget.Endtime),
+                    ),
+                  );
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
