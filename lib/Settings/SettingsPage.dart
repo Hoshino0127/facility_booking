@@ -372,11 +372,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 var settings = Setting(id: 0, Lkey: LKey, EndTime: EndTime, BufferTime: BufferTime, BookingSlot: BookingSlot);
                 DbManager.db.insertLKey(settings);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>
-                      MyHomePage()),
-                );
+                Navigator.push( context, MaterialPageRoute( builder: (context) => MyHomePage()), ).then((value) => setState(() {}));
               },
               textColor: Colors.white,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

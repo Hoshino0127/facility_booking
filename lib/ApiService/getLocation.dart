@@ -16,7 +16,6 @@ Future<List<Setting>> getLkeyFromDB() async {
   return key;
 }
 
-
 Future<Locations> fetchLocation() async {
 
   String Lkey = "23";

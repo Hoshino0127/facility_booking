@@ -126,6 +126,14 @@ class _BookingDetailsState extends State<BookingDetails> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
             // available text
             Container(
               child: Text('AVAILABLE',
@@ -228,7 +236,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-                  /*
+
                   if (_formKey.currentState.validate()) {
                     final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
@@ -242,15 +250,6 @@ class _BookingDetailsState extends State<BookingDetails> {
                       _booking = booking;
                     });
                   }
-                   */
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ReadyToStart(),
-                    ),
-                  );
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

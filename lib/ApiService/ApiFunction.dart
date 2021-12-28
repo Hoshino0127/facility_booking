@@ -16,7 +16,6 @@ Future<List<Setting>> getLkeyFromDB() async {
 
 Future<Booking> fetchBooking() async {
 
-
   FutureBuilder<List<Setting>>(
       future: getLkeyFromDB(),
       builder: (context, snapshot) {
@@ -25,8 +24,7 @@ Future<Booking> fetchBooking() async {
              String Lkey;
              Lkey = snapshot.data[0].Lkey;
              print(Lkey);
-             return Text(Lkey,
-               );
+             return Text(Lkey);
           }
         }
         return Container(

@@ -1,8 +1,10 @@
 import 'package:facility_booking/ApiService/BookingModel.dart';
+import 'package:facility_booking/ApiService/getLocation.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/model/LocationModel.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
@@ -144,9 +146,17 @@ class _ReadyToStartState extends State<ReadyToStart> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.deepOrangeAccent, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
             // pending confirmation text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: Text(
                   'PENDING \n CONFIRMATION',
@@ -162,15 +172,15 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // Facility Name
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: FutureBuilder<api.Booking>(
-                future: api.fetchBooking(),
+              child: FutureBuilder<Locations>(
+                future: fetchLocation(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.FacilityID,
+                    return Text(snapshot.data.locationFullName,
                       style: new TextStyle(
-                          fontSize: 60,
+                          fontSize: 50,
                           color: Colors.blue,
                           fontWeight: FontWeight.bold
                       ),
@@ -189,7 +199,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // time text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: FutureBuilder<api.Booking>(
                 future: api.fetchBooking(),
@@ -229,7 +239,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // Booking Description
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: FutureBuilder<api.Booking>(
                 future: api.fetchBooking(),
@@ -255,7 +265,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // next meeting text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: Text(
                   'Next Meeting : ',
@@ -270,7 +280,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // time text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: Text(
                   '12.30pm - 3.30pm',
@@ -285,7 +295,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
             // host text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
+              margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
               child: Text(
                   'Hosted By John',
@@ -322,7 +332,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                   child: const Text('       Book         ', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.3, 0.6),
+              alignment: Alignment(-0.4, 0.6),
             ),
 
             // confirm to start button
@@ -349,7 +359,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                   child: const Text('Confirm to Start', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.3, 0.8),
+              alignment: Alignment(-0.4, 0.8),
             ),
 
 

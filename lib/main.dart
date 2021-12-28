@@ -11,31 +11,7 @@ import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/Database/SettingsDB.dart';
-
 import 'model/LocationModel.dart';
-
-Future<Locations> fetchLocation() async {
-  final response = await http.get(
-    Uri.parse('https://bobtest.optergykl.ga/lucy/location/v1/locations/23'),
-    // Send authorization headers to the backend.
-    headers: {
-      HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
-    },
-  );
-
-  // Appropriate action depending upon the
-  // server response
-  if (response.statusCode == 200) {
-    return Locations.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
-
-Future<List<Setting>> getSettings() async {
-  Future<List<Setting>> key = DbManager.db.getSettings();
-  return key;
-}
 
 void main() {
   runApp(MyApp());
@@ -66,6 +42,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Future<Locations> futureLocation;
   String EndTime;
+  String Lkey = "23";
+  Future<Locations> fetchLocation() async {
+    final response = await http.get(
+      Uri.parse('https://bobtest.optergykl.ga/lucy/location/v1/locations/$Lkey'),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+      },
+    );
+
+    // Appropriate action depending upon the
+    // server response
+    if (response.statusCode == 200) {
+      return Locations.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<List<Setting>> getSettings() async {
+    Future<List<Setting>> key = DbManager.db.getSettings();
+    return key;
+  }
 
   @override
   void initState() {
@@ -77,10 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
+      body: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.blue, //                   <--- border color
+              width: 7.0,
+            ),
+          ),
           child: Stack(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(right: 300.0),
+          margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: Text(
             'AVAILABLE',
@@ -92,16 +97,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
 
         Container(
-          margin: EdgeInsets.only(right: 300.0),
+          margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: FutureBuilder<Locations>(
             future: futureLocation,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Text(
-                  snapshot.data.description,
+                  snapshot.data.locationFullName,
                   style: new TextStyle(
-                      fontSize: 60,
+                      fontSize: 50,
                       color: Colors.blue,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
@@ -120,8 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 if (snapshot.hasData) {
+
                   EndTime = snapshot.data[0].EndTime;
-                  print(EndTime);
+                  Lkey = snapshot.data[0].Lkey;
+                  print(Lkey);
                   return Container(
                     margin: EdgeInsets.only(right: 300.0),
                     width: double.infinity,
@@ -136,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               }
               return Container(
-                margin: EdgeInsets.only(right: 300.0),
+                margin: EdgeInsets.only(right: 400.0),
                 width: double.infinity,
                 child: Text(
                   'Available Until Null',
@@ -148,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             }),
         Container(
-          margin: EdgeInsets.only(right: 300.0),
+          margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: Text(
             'Next Meeting : ',
@@ -161,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment(0, 0.1),
         ),
         Container(
-          margin: EdgeInsets.only(right: 300.0),
+          margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: Text(
             '12.30pm - 3.30pm',
@@ -175,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
 
         Container(
-          margin: EdgeInsets.only(right: 300.0),
+          margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: Text(
             'Hosted By John',
@@ -214,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Book', style: TextStyle(fontSize: 20)),
             ),
           ),
-          alignment: Alignment(-0.27, 0.5),
+          alignment: Alignment(-0.35, 0.5),
         ),
 
         Container(

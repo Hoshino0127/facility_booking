@@ -205,6 +205,14 @@ class _BookingTimeState extends State<BookingTime> {
           key: _formKey,
             child: Stack(
                 children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue, //                   <--- border color
+                        width: 7.0,
+                      ),
+                    ),
+                  ),
                   // available text
                   Container(
                     child: Text(

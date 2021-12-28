@@ -117,6 +117,14 @@ class _SignInState extends State<SignIn> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
             // available text
             Container(
               child: Text('AVAILABLE',
@@ -209,7 +217,15 @@ class _SignInState extends State<SignIn> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-                 /*
+                  final String Username = UsernameController.text;
+                  final String Password = PasswordController.text;
+
+                  SignInModel signin =
+                  await SignInUser(Username, Password, context);
+
+                  setState(() {
+                    _signIn = signin;
+                  });
                   if (_formKey.currentState.validate()) {
                     final String Username = UsernameController.text;
                     final String Password = PasswordController.text;
@@ -221,14 +237,6 @@ class _SignInState extends State<SignIn> {
                       _signIn = signin;
                     });
                   }
-                  */
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          BookingDetails(widget.Starttime, widget.Endtime),
-                    ),
-                  );
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
