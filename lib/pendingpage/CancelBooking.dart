@@ -4,9 +4,13 @@ import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/inprogresspage/MeetingInProgress.dart';
+import 'package:facility_booking/model/BookingModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../ApiService/ApiFunction.dart' as api;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 
 
@@ -18,7 +22,75 @@ class CancelBooking extends StatefulWidget {
 }
 
 
+Future<Booking> confirmBooking() async{
+  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1254';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    HttpHeaders.authorizationHeader:'SC:epf:8425db95834f9c7f',
+  };
+
+
+
+  var response = await http.delete(Uri.parse(pathUrl),
+    headers: headers, // use jsonEncode()
+
+  );
+
+  print("${response.statusCode}");
+  print("${response.body}");
+}
+
+
+
 class _CancelBookingState extends State<CancelBooking> {
+
+
+  Booking _deleteBook;
+
+  ConfirmBookingDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+
+        Booking deleteBook = await _deleteBook;
+
+        setState(() {
+          _deleteBook = deleteBook;
+        });
+        /*Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignInCancel(),
+          ),);*/
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(" Confirm Booking?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
 
   @override
@@ -36,6 +108,14 @@ class _CancelBookingState extends State<CancelBooking> {
       body: Center(
         child: Stack(
           children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.deepOrangeAccent, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
             // pending confirmation text
             Container(
               margin: EdgeInsets.only(right: 300.0),
@@ -59,7 +139,6 @@ class _CancelBookingState extends State<CancelBooking> {
               child: FutureBuilder<api.Booking>(
                 future: api.fetchBooking(),
                 builder: (context, snapshot) {
-
                   if (snapshot.hasData) {
                     return Text(snapshot.data.FacilityID,
                       style: new TextStyle(
@@ -80,18 +159,43 @@ class _CancelBookingState extends State<CancelBooking> {
               alignment: Alignment(0, -0.4),
             ),
 
+
             // time text
             Container(
               margin: EdgeInsets.only(right: 300.0),
               width: double.infinity,
-              child: Text(
-                  '12.30PM - 2.30PM',
-                  style: new TextStyle(
-                      fontSize: 30,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold
-                  ),
-                  textAlign: TextAlign.center
+              child: FutureBuilder<api.Booking>(
+                future: api.fetchBooking(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData)
+                  {
+
+                    DateTime parseDate =
+                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(snapshot.data.Starttime);
+                    var inputDate = DateTime.parse(parseDate.toString());
+                    var outputFormat = DateFormat('hh:mm a');
+                    var StartTime = outputFormat.format(inputDate);
+
+                    DateTime parseDate2 =
+                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(snapshot.data.Endtime);
+                    var inputDate2 = DateTime.parse(parseDate2.toString());
+                    var outputFormat2 = DateFormat('hh:mm a');
+                    var Endtime = outputFormat2.format(inputDate2);
+
+                    return Text((StartTime +" - "+ Endtime ),
+                      style: new TextStyle(
+                          fontSize: 30,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
               ),
               alignment: Alignment(0, -0.2),
             ),

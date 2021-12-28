@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:facility_booking/model/BookingModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,46 +29,35 @@ Future<Booking> fetchBooking() async {
 }
 */
 
-Future<List<Booking>> fetchBooking(http.Client client) async {
-  final response = await http.get(
+Future<List<Booking>> fetchBooking() async {
+  var response = await http.get(
       Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
       });
-  return compute(parseBooking, response.body);
-}
 
+  if (response.statusCode == 200) {
+    List jsonResponse = json.decode(response.body);
+    return jsonResponse.map((data) => new Booking.fromJson(data)).toList();
+  } else {
+    throw Exception('Failed to load album');
+  }
+
+
+  /*booking =(json.decode(response.body) as List).map((i) =>
+      Booking.fromJson(i)).toList();*/
+}
+/*
 // A function that converts a response body into a List<Booking>.
 List<Booking> parseBooking(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<Booking>((json) => Booking.fromJson(json)).toList();
 }
+*/
 
 
-class Booking {
 
-  final String FacilityID;
-  final String Starttime;
-  final String Endtime;
-  final String Purpose;
-  final String HostName;
-
-  Booking({this.FacilityID, this.Starttime, this.Purpose, this.Endtime, this.HostName});
-
-  factory Booking.fromJson(Map<String, dynamic> json) {
-
-    return Booking(
-        FacilityID: json['FacilityID'],
-        Starttime: json['StartDateTime'],
-        Purpose: json['Purpose'],
-        Endtime: json['EndDateTime'],
-        HostName: json['HostUserFullName']
-    );
-  }
-
-
-}
 
 class TimeTable extends StatefulWidget {
   @override
@@ -75,14 +65,13 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> {
-  /*Future<Booking> futureBooking;*/
-   List<Booking> booking;
+  Future<List<Booking>> futureBooking;
 
 
   @override
   void initState() {
     super.initState();
-  
+    futureBooking = fetchBooking();
   }
 
   @override
@@ -99,9 +88,10 @@ class _TimeTableState extends State<TimeTable> {
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.fill,
                child: FutureBuilder<List<Booking>>(
-                  future: fetchBooking(http.Client()),
+                  future: futureBooking,
                   builder: (context, snapshot){
                     if(snapshot.hasData){
+                      print(snapshot.data[7].locationFullName);
                       return Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(

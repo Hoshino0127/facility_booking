@@ -116,6 +116,14 @@ class _SignInCancelState extends State<SignInCancel> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.deepOrangeAccent, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
             // pending confirmation text
             Container(
               child: Text(
@@ -214,8 +222,17 @@ class _SignInCancelState extends State<SignInCancel> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
+                  final String Username = UsernameController.text;
+                  final String Password = PasswordController.text;
+
+                  SignInModel signin =
+                  await SignInUser(Username, Password, context);
+
+                  setState(() {
+                    _signIn = signin;
+                  });
                   if (_formKey.currentState.validate()) {
-                    /*
+
                     final String Username = UsernameController.text;
                     final String Password = PasswordController.text;
 
@@ -225,14 +242,7 @@ class _SignInCancelState extends State<SignInCancel> {
                     setState(() {
                       _signIn = signin;
                     });
-                  }*/
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CancelBooking()
-                      ),);
-                  }
-                },
+                  }},
                 textColor: Colors.white,
                 padding : EdgeInsets.fromLTRB(0,0,0,0),
                 shape: RoundedRectangleBorder(

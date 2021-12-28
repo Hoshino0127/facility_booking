@@ -20,11 +20,11 @@ class ReadyToStart extends StatefulWidget {
 }
 
 Future<BookingModel> confirmBooking() async{
-  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/899/confirm';
+  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1254/confirm';
 
   var headers = {
     'Content-Type': 'application/json',
-    HttpHeaders.authorizationHeader:'SC:epf:0109999a39c6f102',
+    HttpHeaders.authorizationHeader:'SC:epf:8425db95834f9c7f',
   };
 
   var body = {
@@ -62,12 +62,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
     Widget continueButton = TextButton(
       child: Text("Continue"),
         onPressed: () async {
-        /*
+
         BookingModel confirmBook = await confirmBooking();
 
         setState(() {
          _confirmBook = confirmBook;
-        });*/
+        });
         Navigator.push(
         context,
         MaterialPageRoute(
@@ -140,7 +140,6 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
     return Scaffold(
      appBar: AppBar(
-
      ),
       body: Form(
         key: _formKey,

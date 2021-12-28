@@ -35,6 +35,14 @@ class _ManageMeetingState extends State<ManageMeeting> {
         child: Stack(
           children: <Widget>[
             Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.red, //                   <--- border color
+                  width: 7.0,
+                ),
+              ),
+            ),
+            Container(
               margin: EdgeInsets.only(right: 300.0),
               width: double.infinity,
               child: Text(

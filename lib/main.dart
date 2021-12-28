@@ -75,7 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
           decoration: BoxDecoration(
             border: Border.all(
@@ -138,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    alignment: Alignment(0, -0.1),
+                    alignment: Alignment(-0.1, -0.1),
                   );
                 }
               }

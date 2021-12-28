@@ -33,7 +33,7 @@ Future<Booking> fetchBooking() async {
         );
       });
   final response = await http.get(
-    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1'),
+    Uri.parse('https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1254'),
     // Send authorization headers to the backend.
     headers: {
       HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -57,6 +57,7 @@ class Booking {
   final String Endtime;
   final String Purpose;
   final String HostName;
+
 
   Booking({this.FacilityID, this.Starttime, this.Purpose, this.Endtime, this.HostName});
 

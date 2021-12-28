@@ -236,7 +236,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-
+                 /*
                   if (_formKey.currentState.validate()) {
                     final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
@@ -249,7 +249,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                     setState(() {
                       _booking = booking;
                     });
-                  }
+                  }*/
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ReadyToStart(),
+                    ),
+                  );
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
