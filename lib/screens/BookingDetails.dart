@@ -6,6 +6,7 @@ import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/main.dart';
 import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:flutter/material.dart';
@@ -91,11 +92,12 @@ class _BookingDetailsState extends State<BookingDetails> {
         FlatButton(
             child: Text("OK"),
             onPressed: () {
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      ReadyToStart(),
+                      MyHomePage(),
                 ),
               );
             })
@@ -236,7 +238,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-                 /*
+
                   if (_formKey.currentState.validate()) {
                     final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
@@ -249,14 +251,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                     setState(() {
                       _booking = booking;
                     });
-                  }*/
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ReadyToStart(),
-                    ),
-                  );
+                  }
                 },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

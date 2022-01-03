@@ -12,6 +12,8 @@ import 'dart:async';
 import 'dart:convert';
 
 class SignInCancel extends StatefulWidget {
+  final String Bkey;
+  SignInCancel(this.Bkey, {Key key}) : super(key: key);
   @override
   _SignInCancelState createState() => _SignInCancelState();
 }
@@ -82,7 +84,7 @@ class _SignInCancelState extends State<SignInCancel> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                     CancelBooking(),
+                     CancelBooking(widget.Bkey),
                 ),
               );
             })

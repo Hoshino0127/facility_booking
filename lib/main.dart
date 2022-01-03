@@ -78,13 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
-      body: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.blue, //                   <--- border color
-              width: 7.0,
-            ),
-          ),
+      body: Center(
           child: Stack(children: <Widget>[
         Container(
           margin: EdgeInsets.only(right: 400.0),
@@ -92,10 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text(
             'AVAILABLE',
             style: new TextStyle(
-                fontSize: 60, color: Colors.blue, fontWeight: FontWeight.bold),
+                fontSize: 80, color: Colors.blue, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          alignment: Alignment(0, -0.5),
+          alignment: Alignment(0, -0.6),
         ),
 
         Container(
@@ -108,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Text(
                   snapshot.data.locationFullName,
                   style: new TextStyle(
-                      fontSize: 50,
+                      fontSize: 60,
                       color: Colors.blue,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
@@ -120,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               return const CircularProgressIndicator();
             },
           ),
-          alignment: Alignment(0, -0.3),
+          alignment: Alignment(0, -0.2),
         ),
         FutureBuilder<List<Setting>>(
             future: getSettings(),
@@ -140,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    alignment: Alignment(-0.1, -0.1),
+                    alignment: Alignment(-0.1, 0.15),
                   );
                 }
               }
@@ -153,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                alignment: Alignment(0, -0.1),
+                alignment: Alignment(0, 0.15),
               );
             }),
         Container(
@@ -163,11 +157,11 @@ class _MyHomePageState extends State<MyHomePage> {
             'Next Meeting : ',
             style: new TextStyle(
               fontSize: 20,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
-          alignment: Alignment(0, 0.1),
+          alignment: Alignment(0, 0.3),
         ),
         Container(
           margin: EdgeInsets.only(right: 400.0),
@@ -176,11 +170,11 @@ class _MyHomePageState extends State<MyHomePage> {
             '12.30pm - 3.30pm',
             style: new TextStyle(
               fontSize: 20,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
-          alignment: Alignment(0, 0.2),
+          alignment: Alignment(0, 0.4),
         ),
 
         Container(
@@ -190,11 +184,11 @@ class _MyHomePageState extends State<MyHomePage> {
             'Hosted By John',
             style: new TextStyle(
               fontSize: 20,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
-          alignment: Alignment(0, 0.3),
+          alignment: Alignment(0, 0.5),
         ),
 
         Container(
@@ -219,11 +213,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
                 ),
               ),
-              padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-              child: const Text('Book', style: TextStyle(fontSize: 20)),
+              padding: const EdgeInsets.fromLTRB(100, 12, 100, 12),
+              child: const Text('Book', style: TextStyle(fontSize: 30)),
             ),
           ),
-          alignment: Alignment(-0.35, 0.5),
+          alignment: Alignment(-0.4, 0.7),
         ),
 
         Container(

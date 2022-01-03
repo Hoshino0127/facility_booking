@@ -133,16 +133,21 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (FormFieldState<String> state) {
                 return InputDecorator(
                   decoration: InputDecoration(
-                    errorStyle:
-                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2.0),
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.blue,
+                        color: Colors.blueAccent,
                         width: 2.0,
                       ),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Location',
+                    labelText: 'Location Key',
+                    labelStyle: (TextStyle(fontSize: 25)),
+                    hintText: 'Please enter the Location Key',
+                    hintStyle: (TextStyle(fontSize: 25)),
                   ),
                   isEmpty: _currentSelectedValue == '',
                   child: DropdownButtonHideUnderline(
@@ -175,16 +180,21 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (FormFieldState<String> state) {
                 return InputDecorator(
                   decoration: InputDecoration(
-                    errorStyle:
-                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                    hintText: 'Please select expense',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2.0),
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.blue,
+                        color: Colors.blueAccent,
                         width: 2.0,
                       ),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                     labelText: 'Buffer Time To Start Meeting',
+                    labelStyle: (TextStyle(fontSize: 25)),
+                    hintText: 'Please enter the Buffer Time',
+                    hintStyle: (TextStyle(fontSize: 25)),
                   ),
                   isEmpty: _currentSelectedTime == '',
                   child: DropdownButtonHideUnderline(
@@ -217,17 +227,21 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (FormFieldState<String> state) {
                 return InputDecorator(
                   decoration: InputDecoration(
-                    errorStyle:
-                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                    hintText: 'Please select expense',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2.0),
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.blue,
+                        color: Colors.blueAccent,
                         width: 2.0,
                       ),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Booking Slot',
+                    labelText: 'Location Key',
+                    labelStyle: (TextStyle(fontSize: 25)),
+                    hintText: 'Please enter the Location Key',
+                    hintStyle: (TextStyle(fontSize: 25)),
                   ),
                   isEmpty: _currentSelectedBooking == '',
                   child: DropdownButtonHideUnderline(

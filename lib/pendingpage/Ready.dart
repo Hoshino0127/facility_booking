@@ -4,6 +4,7 @@ import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/main.dart';
 import 'package:facility_booking/model/LocationModel.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
@@ -15,37 +16,94 @@ import 'dart:convert';
 import 'dart:io';
 
 class ReadyToStart extends StatefulWidget {
+  final String Bkey;
+  ReadyToStart(this.Bkey, {Key key}) : super(key: key);
   @override
   _ReadyToStartState createState() => _ReadyToStartState();
 }
 
-Future<BookingModel> confirmBooking() async{
-  final String pathUrl = 'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/1254/confirm';
-
-  var headers = {
-    'Content-Type': 'application/json',
-    HttpHeaders.authorizationHeader:'SC:epf:8425db95834f9c7f',
-  };
-
-  var body = {
-  "Stage": "Confirmed",
-};
-
-  var response = await http.patch(Uri.parse(pathUrl),
-    headers: headers,
-    body: jsonEncode(body), // use jsonEncode()
-
-  );
-
-  print("${response.statusCode}");
-  print("${response.body}");
-}
-
 class _ReadyToStartState extends State<ReadyToStart> {
-
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<BookingModel> confirmBooking(context) async {
+    final String key = widget.Bkey;
+    final String pathUrl =
+        'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/$key/finalize';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+    };
+
+    var body = {"bk": "$key"};
+
+    var response = await http.patch(
+      Uri.parse(pathUrl),
+      headers: headers,
+      body: jsonEncode(body), // use jsonEncode()
+    );
+
+    print("${response.statusCode}");
+    print("${response.body}");
+
+    if (response.statusCode != 200) {
+      _errorConfirm(context, response);
+    } else {
+      _successfulConfirm(context);
+    }
+  }
+
+
+  void _errorConfirm(BuildContext context, response ) {
+    final alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("${response.body}"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _successfulConfirm(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Successful"),
+      content: Text("A booking has been confirmed"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MyHomePage(),
+                ),
+              );
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   BookingModel _confirmBook;
@@ -54,26 +112,20 @@ class _ReadyToStartState extends State<ReadyToStart> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
 
     Widget continueButton = TextButton(
       child: Text("Continue"),
-        onPressed: () async {
-
-        BookingModel confirmBook = await confirmBooking();
+      onPressed: () async {
+        BookingModel confirmBook = await confirmBooking(context);
 
         setState(() {
-         _confirmBook = confirmBook;
+          _confirmBook = confirmBook;
         });
-        Navigator.push(
-        context,
-        MaterialPageRoute(
-           builder: (context) => SignInCancel(),
-           ),);
-       },
+      },
     );
 
     // set up the AlertDialog
@@ -98,19 +150,20 @@ class _ReadyToStartState extends State<ReadyToStart> {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
 
     Widget continueButton = TextButton(
       child: Text("Continue"),
-      onPressed: ()  {
+      onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => BookingTime(),
-          ),);
+          ),
+        );
       },
     );
 
@@ -139,8 +192,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
 
 
     return Scaffold(
-     appBar: AppBar(
-     ),
+      appBar: AppBar(),
       body: Form(
         key: _formKey,
         child: Stack(
@@ -148,7 +200,8 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.deepOrangeAccent, //                   <--- border color
+                  color: Colors
+                      .deepOrangeAccent, //                   <--- border color
                   width: 7.0,
                 ),
               ),
@@ -157,15 +210,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: Text(
-                  'PENDING \n CONFIRMATION',
+              child: Text('PENDING \n CONFIRMATION',
                   style: new TextStyle(
                       fontSize: 60,
                       color: Colors.deepOrangeAccent,
-                      fontWeight: FontWeight.bold
-                  ),
-                  textAlign: TextAlign.center
-              ),
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center),
               alignment: Alignment(0, -0.9),
             ),
 
@@ -177,12 +227,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
                 future: fetchLocation(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.locationFullName,
+                    return Text(
+                      snapshot.data.locationFullName,
                       style: new TextStyle(
                           fontSize: 50,
                           color: Colors.blue,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     );
                   } else if (snapshot.hasError) {
@@ -194,7 +244,6 @@ class _ReadyToStartState extends State<ReadyToStart> {
               ),
               alignment: Alignment(0, -0.4),
             ),
-            
 
             // time text
             Container(
@@ -203,27 +252,27 @@ class _ReadyToStartState extends State<ReadyToStart> {
               child: FutureBuilder<api.Booking>(
                 future: api.fetchBooking(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData)
-                  {
-
+                  if (snapshot.hasData) {
                     DateTime parseDate =
-                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(snapshot.data.Starttime);
+                        new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .parse(snapshot.data.Starttime);
                     var inputDate = DateTime.parse(parseDate.toString());
                     var outputFormat = DateFormat('hh:mm a');
                     var StartTime = outputFormat.format(inputDate);
 
                     DateTime parseDate2 =
-                    new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(snapshot.data.Endtime);
+                        new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .parse(snapshot.data.Endtime);
                     var inputDate2 = DateTime.parse(parseDate2.toString());
                     var outputFormat2 = DateFormat('hh:mm a');
                     var Endtime = outputFormat2.format(inputDate2);
 
-                    return Text((StartTime +" - "+ Endtime ),
+                    return Text(
+                      (StartTime + " - " + Endtime),
                       style: new TextStyle(
                           fontSize: 30,
                           color: Colors.grey,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     );
                   } else if (snapshot.hasError) {
@@ -244,12 +293,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
                 future: api.fetchBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.Purpose,
+                    return Text(
+                      snapshot.data.Purpose,
                       style: new TextStyle(
                           fontSize: 30,
                           color: Colors.grey,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     );
                   } else if (snapshot.hasError) {
@@ -266,14 +315,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: Text(
-                  'Next Meeting : ',
+              child: Text('Next Meeting : ',
                   style: new TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
                   ),
-                  textAlign: TextAlign.center
-              ),
+                  textAlign: TextAlign.center),
               alignment: Alignment(0, 0.2),
             ),
 
@@ -281,14 +328,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: Text(
-                  '12.30pm - 3.30pm',
+              child: Text('12.30pm - 3.30pm',
                   style: new TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
                   ),
-                  textAlign: TextAlign.center
-              ),
+                  textAlign: TextAlign.center),
               alignment: Alignment(0, 0.3),
             ),
 
@@ -296,14 +341,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: Text(
-                  'Hosted By John',
+              child: Text('Hosted By John',
                   style: new TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
                   ),
-                  textAlign: TextAlign.center
-              ),
+                  textAlign: TextAlign.center),
               alignment: Alignment(0, 0.4),
             ),
 
@@ -316,7 +359,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                   }
                 },
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
@@ -328,7 +371,8 @@ class _ReadyToStartState extends State<ReadyToStart> {
                     ),
                   ),
                   padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                  child: const Text('       Book         ', style: TextStyle(fontSize: 20)),
+                  child: const Text('       Book         ',
+                      style: TextStyle(fontSize: 20)),
                 ),
               ),
               alignment: Alignment(-0.4, 0.6),
@@ -343,7 +387,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                   }
                 },
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
@@ -355,12 +399,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
                     ),
                   ),
                   padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                  child: const Text('Confirm to Start', style: TextStyle(fontSize: 20)),
+                  child: const Text('Confirm to Start',
+                      style: TextStyle(fontSize: 20)),
                 ),
               ),
               alignment: Alignment(-0.4, 0.8),
             ),
-
 
             // time table
             Container(
@@ -371,19 +415,19 @@ class _ReadyToStartState extends State<ReadyToStart> {
             // Settings icon
             Container(
               child: Settings(),
-              alignment: Alignment(-1,-  1),
+              alignment: Alignment(-1, -1),
             ),
 
             //info
             Container(
               child: Info(),
-              alignment: Alignment(1,-0.5),
+              alignment: Alignment(1, -0.5),
             ),
 
             // time and date
             Container(
               child: TimeDate(),
-              alignment: Alignment(1,-1),
+              alignment: Alignment(1, -1),
             ),
           ],
         ),
