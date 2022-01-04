@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
@@ -39,15 +40,14 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
-
 class _MyHomePageState extends State<MyHomePage> {
   Future<Locations> futureLocation;
   String EndTime;
   String Lkey = "23";
   Future<Locations> fetchLocation() async {
     final response = await http.get(
-      Uri.parse('https://bobtest.optergykl.ga/lucy/location/v1/locations/$Lkey'),
+      Uri.parse(
+          'https://bobtest.optergykl.ga/lucy/location/v1/locations/$Lkey'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -83,12 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
           child: Stack(children: <Widget>[
         Container(
+          child: AvailableBorder(),
+        ),
+        Container(
           margin: EdgeInsets.only(right: 400.0),
           width: double.infinity,
           child: Text(
             'AVAILABLE',
             style: new TextStyle(
-                fontSize: 80, color: Colors.blue, fontWeight: FontWeight.bold),
+                fontSize: 80, color: Color(0xFF2E368F), fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           alignment: Alignment(0, -0.6),
@@ -105,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   snapshot.data.locationFullName,
                   style: new TextStyle(
                       fontSize: 60,
-                      color: Colors.blue,
+                      color: Color(0xFF2E368F),
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 );
@@ -123,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 if (snapshot.hasData) {
-
                   EndTime = snapshot.data[0].EndTime;
                   Lkey = snapshot.data[0].Lkey;
                   print(Lkey);
@@ -133,7 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       'Available Until $EndTime',
                       style: new TextStyle(
-                          fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
+                          fontSize: 40,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     alignment: Alignment(-0.1, 0.15),
@@ -146,7 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   'Available Until Null',
                   style: new TextStyle(
-                      fontSize: 40, color: Colors.grey, fontWeight: FontWeight.bold),
+                      fontSize: 40,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 alignment: Alignment(0, 0.15),
@@ -211,9 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                gradient: LinearGradient(
-                  colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                ),
+               color: Color(0xFF2E368F),
               ),
               padding: const EdgeInsets.fromLTRB(100, 12, 100, 12),
               child: const Text('Book', style: TextStyle(fontSize: 30)),
@@ -230,7 +234,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // time table
         Container(
           child: TimeTable(),
-          alignment: Alignment(1, 1),
         ),
 
         // Settings icon

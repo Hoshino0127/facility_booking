@@ -1,6 +1,7 @@
 import 'package:facility_booking/ApiService/BookingModel.dart';
 import 'package:facility_booking/ApiService/getLocation.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
@@ -56,6 +57,26 @@ class _ReadyToStartState extends State<ReadyToStart> {
     }
   }
 
+  Future<BookingModel> fetchBooking() async {
+    final String key = widget.Bkey;
+    final response = await http.get(
+      Uri.parse(
+          'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings/$key'),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+      },
+    );
+
+    // Appropriate action depending upon the
+    // server response
+    if (response.statusCode == 200) {
+      return BookingModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
 
   void _errorConfirm(BuildContext context, response ) {
     final alert = AlertDialog(
@@ -86,7 +107,6 @@ class _ReadyToStartState extends State<ReadyToStart> {
         FlatButton(
             child: Text("OK"),
             onPressed: () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -198,13 +218,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors
-                      .deepOrangeAccent, //                   <--- border color
-                  width: 7.0,
-                ),
-              ),
+              child: PendingBorder(),
             ),
             // pending confirmation text
             Container(
@@ -223,15 +237,15 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: FutureBuilder<Locations>(
-                future: fetchLocation(),
+              child: FutureBuilder<BookingModel>(
+                future: fetchBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(
                       snapshot.data.locationFullName,
                       style: new TextStyle(
                           fontSize: 50,
-                          color: Colors.blue,
+                          color: Color(0xFF2E368F),
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     );
@@ -249,20 +263,20 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: FutureBuilder<api.Booking>(
-                future: api.fetchBooking(),
+              child: FutureBuilder<BookingModel>(
+                future: fetchBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     DateTime parseDate =
                         new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .parse(snapshot.data.Starttime);
+                            .parse(snapshot.data.startDateTime);
                     var inputDate = DateTime.parse(parseDate.toString());
                     var outputFormat = DateFormat('hh:mm a');
                     var StartTime = outputFormat.format(inputDate);
 
                     DateTime parseDate2 =
                         new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .parse(snapshot.data.Endtime);
+                            .parse(snapshot.data.endDateTime);
                     var inputDate2 = DateTime.parse(parseDate2.toString());
                     var outputFormat2 = DateFormat('hh:mm a');
                     var Endtime = outputFormat2.format(inputDate2);
@@ -289,12 +303,12 @@ class _ReadyToStartState extends State<ReadyToStart> {
             Container(
               margin: EdgeInsets.only(right: 400.0),
               width: double.infinity,
-              child: FutureBuilder<api.Booking>(
-                future: api.fetchBooking(),
+              child: FutureBuilder<BookingModel>(
+                future: fetchBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(
-                      snapshot.data.Purpose,
+                      snapshot.data.purpose,
                       style: new TextStyle(
                           fontSize: 30,
                           color: Colors.grey,
@@ -366,9 +380,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
+                      color: Color(0xFF2E368F)
                   ),
                   padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
                   child: const Text('       Book         ',
@@ -394,9 +406,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
+                      color: Color(0xFF2E368F)
                   ),
                   padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
                   child: const Text('Confirm to Start',

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:facility_booking/inprogresspage/MeetingInProgress.dart';
+import 'package:facility_booking/inprogresspage/SignInProgress.dart';
 import 'package:facility_booking/model/BookingModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
@@ -131,6 +133,45 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
+  InProgressDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignInProgress(Bkey),
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Choose your action"),
+      content: Text("Would you like to view current selected booking??"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -196,7 +237,7 @@ class _TimeTableState extends State<TimeTable> {
                                       child: Container(
                                           width: 200,
                                           decoration: BoxDecoration(
-                                              color: Colors.blueAccent),
+                                              color: Color(0xFF2E368F)),
                                           child: Text('Booked',
                                               style: TextStyle(
                                                 fontSize: 35.0,
@@ -207,22 +248,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time11 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -295,22 +333,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time1130 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -383,22 +418,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time12 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -471,22 +503,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time1230 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -559,22 +588,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time13 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -647,22 +673,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time1330 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -735,22 +758,19 @@ class _TimeTableState extends State<TimeTable> {
                                     );
                                   } else if (time14 == starttime &&
                                       stage == "InProgress") {
-                                    return Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xff4F7FFF),
-                                              Color(0xff6700DD)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('In Progress',
-                                            style: TextStyle(
-                                              fontSize: 35.0,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center));
+                                    return InkWell(
+                                      child: Container(
+                                          width: 200,
+                                          decoration:
+                                              BoxDecoration(color: Colors.red),
+                                          child: Text('In Progress',
+                                              style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center)),
+                                      onTap: () => InProgressDialog(context),
+                                    );
                                   } else {
                                     return Text("");
                                   }
@@ -762,6 +782,7 @@ class _TimeTableState extends State<TimeTable> {
           ),
         ],
       ),
+      alignment: Alignment(0.98, 0.95),
     );
   }
 }

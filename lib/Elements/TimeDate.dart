@@ -11,7 +11,7 @@ class TimeDate extends StatelessWidget {
         child: Text(
             formattedDate,
             style: new TextStyle(
-              fontSize: 40,
+              fontSize: 50,
               color: Colors.grey,
     )
     )

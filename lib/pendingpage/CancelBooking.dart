@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:facility_booking/ApiService/BookingModel.dart';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
@@ -166,7 +168,7 @@ class _CancelBookingState extends State<CancelBooking> {
   void initState() {
     super.initState();
   }
-
+  String Bkey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,13 +177,7 @@ class _CancelBookingState extends State<CancelBooking> {
           child: Stack(
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors
-                        .deepOrangeAccent, //                   <--- border color
-                    width: 7.0,
-                  ),
-                ),
+                child: PendingBorder(),
               ),
               // pending confirmation text
               Container(
@@ -385,9 +381,7 @@ class _CancelBookingState extends State<CancelBooking> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
-                      gradient: LinearGradient(
-                        colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                      ),
+                      color: Color(0xFF2E368F),
                     ),
                     padding: const EdgeInsets.fromLTRB(30, 12, 30, 12),
                     child: const Text('Yes', style: TextStyle(fontSize: 20)),
@@ -398,7 +392,12 @@ class _CancelBookingState extends State<CancelBooking> {
 
               Container(
                 child: RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context) => MeetingInProgress(Bkey)));
+
+                  },
                   textColor: Colors.white,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   shape: RoundedRectangleBorder(
@@ -441,6 +440,10 @@ class _CancelBookingState extends State<CancelBooking> {
                 child: TimeDate(),
                 alignment: Alignment(1, -1),
               ),
+              //Home Button
+              Container(
+                child: HomeButton(),
+              )
             ],
           ),
         ));

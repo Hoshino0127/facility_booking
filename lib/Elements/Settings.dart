@@ -9,7 +9,7 @@ class Settings extends StatelessWidget {
       child:  IconButton(
         icon: Icon(
           Icons.settings,
-          color: Colors.blue,
+          color: Color(0xFF2E368F),
           size: 80.0,
         ),
         onPressed: () {

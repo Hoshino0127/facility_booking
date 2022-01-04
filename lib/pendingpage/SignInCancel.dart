@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
@@ -128,6 +129,7 @@ class _SignInCancelState extends State<SignInCancel> {
             ),
             // pending confirmation text
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Text(
                   'PENDING \n CONFIRMATION',
                   style: new TextStyle(
@@ -137,21 +139,22 @@ class _SignInCancelState extends State<SignInCancel> {
                   ),
                   textAlign: TextAlign.center
               ),
-              alignment: Alignment(-0.6, -0.9),
+              alignment: Alignment(0, -0.9),
             ),
 
             // center box
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Container(
-                margin: EdgeInsets.all(20),
-                height: 300,
-                width: 500,
+                height: 400,
+                width: 600,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), //border corner radius
-                  boxShadow:[
+                  borderRadius:
+                  BorderRadius.circular(30), //border corner radius
+                  boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.5),//color of shadow
+                      color: Colors.white.withOpacity(0.5), //color of shadow
                       spreadRadius: 5, //spread radius
                       blurRadius: 7, // blur radius
                       offset: Offset(0, 2), // changes position of shadow
@@ -162,25 +165,22 @@ class _SignInCancelState extends State<SignInCancel> {
                   ],
                 ),
               ),
-              alignment: Alignment(-0.65, 0),
+              alignment: Alignment(0, 0.3),
             ),
 
             //please sign in text
             Container(
-              child: Text(
-                  'Please Sign-In',
+              child: Text('PLEASE SIGN-IN',
                   style: new TextStyle(
                       fontSize: 30,
                       color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  )
-              ),
-              alignment: Alignment(-0.45, -0.3),
+                      fontWeight: FontWeight.bold)),
+              alignment: Alignment(-0.4, -0.3),
             ),
 
-            // username text field
+            //username text box
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 20, 580, 12),
               child: TextFormField(
                 controller: UsernameController,
                 decoration: InputDecoration(
@@ -199,9 +199,9 @@ class _SignInCancelState extends State<SignInCancel> {
               alignment: Alignment(-0.8, -0.1),
             ),
 
-            // password textfield
+            // password text field
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 60, 580, 12),
               child: TextFormField(
                 controller: PasswordController,
                 decoration: InputDecoration(
@@ -222,9 +222,18 @@ class _SignInCancelState extends State<SignInCancel> {
 
             // submit button
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: RaisedButton(
                 onPressed: () async {
-                  final String Username = UsernameController.text;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CancelBooking(widget.Bkey),
+                    ),
+                  );
+
+                  /*  final String Username = UsernameController.text;
                   final String Password = PasswordController.text;
 
                   SignInModel signin =
@@ -234,7 +243,6 @@ class _SignInCancelState extends State<SignInCancel> {
                     _signIn = signin;
                   });
                   if (_formKey.currentState.validate()) {
-
                     final String Username = UsernameController.text;
                     final String Password = PasswordController.text;
 
@@ -244,24 +252,23 @@ class _SignInCancelState extends State<SignInCancel> {
                     setState(() {
                       _signIn = signin;
                     });
-                  }},
+                  }*/
+                },
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
+                      borderRadius: BorderRadius.circular(18),
+                      color: Color(0xFF2E368F)
                   ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                  padding: const EdgeInsets.fromLTRB(80, 12, 80, 12),
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.2, 0.35),
+              alignment: Alignment(0, 0.45),
             ),
 
 
@@ -288,6 +295,11 @@ class _SignInCancelState extends State<SignInCancel> {
               child: TimeDate(),
               alignment: Alignment(1,-1),
             ),
+
+            //Home Button
+            Container(
+              child: HomeButton(),
+            )
           ],
         ),
       ),

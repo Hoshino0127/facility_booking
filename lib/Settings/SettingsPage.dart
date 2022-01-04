@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Location Key',
+                    labelText: 'Booking Slot',
                     labelStyle: (TextStyle(fontSize: 25)),
                     hintText: 'Please enter the Location Key',
                     hintStyle: (TextStyle(fontSize: 25)),
@@ -268,11 +268,7 @@ class _SettingsPageState extends State<SettingsPage> {
             alignment: Alignment(0, -0.2),
           ),
 
-          /*   Container(
-              padding: EdgeInsets.fromLTRB(300, 20, 300, 0),
-            ),
 
-*/
           Container(
             child: Container(
               margin: EdgeInsets.all(20),
@@ -396,9 +392,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
-                  gradient: LinearGradient(
-                    colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                  ),
+                    color: Color(0xFF2E368F)
                 ),
                 padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
                 child: const Text('Submit', style: TextStyle(fontSize: 20)),

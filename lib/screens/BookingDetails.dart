@@ -2,13 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:facility_booking/ApiService/BookingModel.dart';
 import 'package:facility_booking/Database/SettingsDB.dart';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/inprogresspage/SignInProgress.dart';
 import 'package:facility_booking/main.dart';
 import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
+import 'package:facility_booking/pendingpage/SignInCancel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,14 +26,13 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
-
   Future<List<Setting>> getSettings() async {
     Future<List<Setting>> key = DbManager.db.getSettings();
     return key;
   }
 
-  Future<BookingModel> createBooking(
-     context, String Hostname, String Starttime, String Endtime, String Details, String Lkey) async {
+  Future<BookingModel> createBooking(context, String Hostname, String Starttime,
+      String Endtime, String Details, String Lkey) async {
     final String pathUrl =
         'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
 
@@ -63,7 +66,8 @@ class _BookingDetailsState extends State<BookingDetails> {
       _successfullogin(context);
     }
   }
-  void _errorlogin(BuildContext context, response ) {
+
+  void _errorlogin(BuildContext context, response) {
     final alert = AlertDialog(
       title: Text("Error"),
       content: Text("${response.body}"),
@@ -92,12 +96,10 @@ class _BookingDetailsState extends State<BookingDetails> {
         FlatButton(
             child: Text("OK"),
             onPressed: () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      MyHomePage(),
+                  builder: (context) => MyHomePage(),
                 ),
               );
             })
@@ -119,6 +121,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   BookingModel _booking;
   static String Lkey;
+  String Bkey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,21 +132,17 @@ class _BookingDetailsState extends State<BookingDetails> {
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue, //                   <--- border color
-                  width: 7.0,
-                ),
-              ),
+              child: AvailableBorder(),
             ),
             // available text
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Text('AVAILABLE',
                   style: new TextStyle(
-                      fontSize: 60,
-                      color: Colors.blue,
+                      fontSize: 80,
+                      color: Color(0xFF2E368F),
                       fontWeight: FontWeight.bold)),
-              alignment: Alignment(-0.5, -0.8),
+              alignment: Alignment(0, -0.8),
             ),
 
             FutureBuilder<List<Setting>>(
@@ -159,18 +158,16 @@ class _BookingDetailsState extends State<BookingDetails> {
                       );
                     }
                   }
-                  return Container(
-                    alignment: AlignmentDirectional.center,
-                    child: CircularProgressIndicator(),
-                  );
+                  return Text("");
                 }),
 
             // center box
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Container(
                 margin: EdgeInsets.all(20),
-                height: 450,
-                width: 500,
+                height: 500,
+                width: 600,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius:
@@ -188,12 +185,12 @@ class _BookingDetailsState extends State<BookingDetails> {
                   ],
                 ),
               ),
-              alignment: Alignment(-0.65, 0.4),
+              alignment: Alignment(0, 0.8),
             ),
 
             //HostName text box
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 12, 580, 12),
               child: TextFormField(
                 controller: HostController,
                 decoration: InputDecoration(
@@ -214,7 +211,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
             // Booking Details
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 30, 580, 12),
               child: TextFormField(
                 controller: DetailsController,
                 maxLines: 10,
@@ -238,7 +235,6 @@ class _BookingDetailsState extends State<BookingDetails> {
             Container(
               child: RaisedButton(
                 onPressed: () async {
-
                   if (_formKey.currentState.validate()) {
                     final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
@@ -246,7 +242,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                     final String Endtime = widget.Endtime;
 
                     BookingModel booking = await createBooking(
-                       context, Hostname, Starttime, Endtime, Details, Lkey);
+                        context, Hostname, Starttime, Endtime, Details, Lkey);
 
                     setState(() {
                       _booking = booking;
@@ -261,21 +257,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
+                    color: Color(0xFF2E368F),
                   ),
                   padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.6, 0.65),
+              alignment: Alignment(-0.5, 0.7),
             ),
 
             // cancel button
             Container(
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyHomePage(),
+                    ),);
+                },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
@@ -292,7 +292,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   child: const Text('Cancel', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.25, 0.65),
+              alignment: Alignment(-0.15, 0.7),
             ),
 
             // time table
@@ -318,6 +318,10 @@ class _BookingDetailsState extends State<BookingDetails> {
               child: TimeDate(),
               alignment: Alignment(1, -1),
             ),
+            //Home Button
+            Container(
+              child: HomeButton(),
+            )
           ],
         ),
       ),

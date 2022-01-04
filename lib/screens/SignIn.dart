@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
@@ -118,29 +120,25 @@ class _SignInState extends State<SignIn> {
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue, //                   <--- border color
-                  width: 7.0,
-                ),
-              ),
+              child: AvailableBorder(),
             ),
             // available text
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Text('AVAILABLE',
                   style: new TextStyle(
-                      fontSize: 60,
-                      color: Colors.blue,
+                      fontSize: 80,
+                      color: Color(0xFF2E368F),
                       fontWeight: FontWeight.bold)),
-              alignment: Alignment(-0.5, -0.7),
+              alignment: Alignment(0, -0.7),
             ),
 
             // center box
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Container(
-                margin: EdgeInsets.all(20),
-                height: 300,
-                width: 500,
+                height: 400,
+                width: 600,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius:
@@ -158,22 +156,22 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
               ),
-              alignment: Alignment(-0.65, 0),
+              alignment: Alignment(0, 0.3),
             ),
 
             //please sign in text
             Container(
-              child: Text('Please Sign-In',
+              child: Text('PLEASE SIGN-IN',
                   style: new TextStyle(
                       fontSize: 30,
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
-              alignment: Alignment(-0.45, -0.3),
+              alignment: Alignment(-0.4, -0.3),
             ),
 
             //username text box
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 20, 580, 12),
               child: TextFormField(
                 controller: UsernameController,
                 decoration: InputDecoration(
@@ -194,7 +192,7 @@ class _SignInState extends State<SignIn> {
 
             // password text field
             Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 670, 12),
+              padding: EdgeInsets.fromLTRB(180, 60, 580, 12),
               child: TextFormField(
                 controller: PasswordController,
                 decoration: InputDecoration(
@@ -215,6 +213,7 @@ class _SignInState extends State<SignIn> {
 
             // submit button
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: RaisedButton(
                 onPressed: () async {
                   final String Username = UsernameController.text;
@@ -245,16 +244,13 @@ class _SignInState extends State<SignIn> {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                      borderRadius: BorderRadius.circular(18),
+                      color: Color(0xFF2E368F)),
+                  padding: const EdgeInsets.fromLTRB(80, 12, 80, 12),
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.2, 0.35),
+              alignment: Alignment(0, 0.45),
             ),
 
             // time table
@@ -274,12 +270,15 @@ class _SignInState extends State<SignIn> {
               child: Info(),
               alignment: Alignment(1, -0.5),
             ),
-
             // time and date
             Container(
               child: TimeDate(),
               alignment: Alignment(1, -1),
             ),
+            //Home Button
+            Container(
+              child: HomeButton(),
+            )
           ],
         ),
       ),

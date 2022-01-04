@@ -1,33 +1,120 @@
 import 'dart:io';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
+import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/inprogresspage/ManageMeeting.dart';
+import 'package:facility_booking/inprogresspage/MeetingInProgress.dart';
+import 'package:facility_booking/model/SignInModel.dart';
 import 'package:flutter/material.dart';
 import '../ApiService/ApiFunction.dart' as api;
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 
 
 class SignInProgress extends StatefulWidget {
+  final String Bkey;
+  SignInProgress(this.Bkey, {Key key}) : super(key: key);
   @override
   _SignInProgressState createState() => _SignInProgressState();
 }
 
 class _SignInProgressState extends State<SignInProgress> {
+
+  Future<SignInModel> SignInUser(
+      String Username, String Password, context) async {
+    final String pathUrl =
+        'https://bobtest.optergykl.ga/hook/user/v1/authenticate';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      HttpHeaders.authorizationHeader: 'SC:epf:0109999a39c6f102',
+    };
+
+    var body = {
+      "LoginID": "Xenber",
+      "Password": "aN2TJ2qJEF",
+    };
+
+    var response = await http.post(
+      Uri.parse(pathUrl),
+      headers: headers,
+      body: jsonEncode(body), // use jsonEncode()
+    );
+
+    print("${response.statusCode}");
+    print("${response.body}");
+
+    if (response.statusCode != 200) {
+      _errorlogin(context);
+    } else {
+      _successfullogin(context);
+    }
+  }
+
+  void _errorlogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("Invalid username or password."),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _successfullogin(BuildContext context) {
+    final alert = AlertDialog(
+      title: Text("Successful"),
+      content: Text("Successful login"),
+      actions: [
+        FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MeetingInProgress(widget.Bkey),
+                ),
+              );
+            })
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  SignInModel _signIn;
+
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
+
 
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -38,16 +125,11 @@ class _SignInProgressState extends State<SignInProgress> {
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.red, //                   <--- border color
-                  width: 7.0,
-                ),
-              ),
+              child: InProgressBorder(),
             ),
+            // pending confirmation text
             Container(
-              margin: EdgeInsets.only(right: 300.0),
-              width: double.infinity,
+              margin: EdgeInsets.only(right: 400.0),
               child: Text(
                   'IN PROGRESS',
                   style: new TextStyle(
@@ -57,91 +139,22 @@ class _SignInProgressState extends State<SignInProgress> {
                   ),
                   textAlign: TextAlign.center
               ),
-              alignment: Alignment(0, -0.9),
-            ),
-            // meeting room text
-
-            Container(
-              margin: EdgeInsets.only(right: 300.0),
-              width: double.infinity,
-              child: FutureBuilder<api.Booking>(
-                future: api.fetchBooking(),
-                builder: (context, snapshot) {
-
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.FacilityID,
-                      style: new TextStyle(
-                          fontSize: 60,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold
-                      ),
-                      textAlign: TextAlign.center,
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-              alignment: Alignment(0, -0.6),
-            ),
-
-            // time text
-            Container(
-              margin: EdgeInsets.only(right: 300.0),
-              width: double.infinity,
-              child: Text(
-                  '12.30PM - 2.30PM',
-                  style: new TextStyle(
-                      fontSize: 30,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold
-                  ),
-                  textAlign: TextAlign.center
-              ),
-              alignment: Alignment(0, -0.4),
-            ),
-
-            // description text
-            Container(
-              margin: EdgeInsets.only(right: 300.0),
-              width: double.infinity,
-              child: FutureBuilder<api.Booking>(
-                future: api.fetchBooking(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.Purpose,
-                      style: new TextStyle(
-                          fontSize: 30,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold
-                      ),
-                      textAlign: TextAlign.center,
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-              alignment: Alignment(0, -0.2),
+              alignment: Alignment(0, -0.7),
             ),
 
             // center box
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: Container(
-                margin: EdgeInsets.all(20),
-                height: 300,
-                width: 500,
+                height: 400,
+                width: 600,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), //border corner radius
-                  boxShadow:[
+                  borderRadius:
+                  BorderRadius.circular(30), //border corner radius
+                  boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.5),//color of shadow
+                      color: Colors.white.withOpacity(0.5), //color of shadow
                       spreadRadius: 5, //spread radius
                       blurRadius: 7, // blur radius
                       offset: Offset(0, 2), // changes position of shadow
@@ -152,25 +165,22 @@ class _SignInProgressState extends State<SignInProgress> {
                   ],
                 ),
               ),
-              alignment: Alignment(-0.4, 1),
+              alignment: Alignment(0, 0.3),
             ),
 
             //please sign in text
             Container(
-              child: Text(
-                  'Please Sign-In',
+              child: Text('PLEASE SIGN-IN',
                   style: new TextStyle(
                       fontSize: 30,
                       color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  )
-              ),
-              alignment: Alignment(-0.3, 0.23),
+                      fontWeight: FontWeight.bold)),
+              alignment: Alignment(-0.4, -0.3),
             ),
 
-            // username text field
+            //username text box
             Container(
-              padding: EdgeInsets.fromLTRB(280, 12, 600, 12),
+              padding: EdgeInsets.fromLTRB(180, 20, 580, 12),
               child: TextFormField(
                 controller: UsernameController,
                 decoration: InputDecoration(
@@ -186,12 +196,12 @@ class _SignInProgressState extends State<SignInProgress> {
                   return null;
                 },
               ),
-              alignment: Alignment(-0.8, 0.5),
+              alignment: Alignment(-0.8, -0.1),
             ),
 
-            // password textfield
+            // password text field
             Container(
-              padding: EdgeInsets.fromLTRB(280, 12, 600, 12),
+              padding: EdgeInsets.fromLTRB(180, 60, 580, 12),
               child: TextFormField(
                 controller: PasswordController,
                 decoration: InputDecoration(
@@ -207,43 +217,59 @@ class _SignInProgressState extends State<SignInProgress> {
                   return null;
                 },
               ),
-              alignment: Alignment(-0.8, 0.75),
+              alignment: Alignment(-0.8, 0.15),
             ),
 
             // submit button
             Container(
+              margin: EdgeInsets.only(right: 400.0),
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ManageMeeting()
-                    ),);
-                 /* if (_formKey.currentState.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ManageMeeting()
-                      ),);
-                  }*/
+                      builder: (context) =>
+                          MeetingInProgress(widget.Bkey),
+                    ),
+                  );
+
+                  final String Username = UsernameController.text;
+                  final String Password = PasswordController.text;
+
+                  SignInModel signin =
+                  await SignInUser(Username, Password, context);
+
+                  setState(() {
+                    _signIn = signin;
+                  });
+                  if (_formKey.currentState.validate()) {
+                    final String Username = UsernameController.text;
+                    final String Password = PasswordController.text;
+
+                    SignInModel signin =
+                        await SignInUser(Username, Password, context);
+
+                    setState(() {
+                      _signIn = signin;
+                    });
+                  }
                 },
                 textColor: Colors.white,
-                padding : EdgeInsets.fromLTRB(0,0,0,0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                    ),
+                      borderRadius: BorderRadius.circular(18),
+                      color: Color(0xFF2E368F)
                   ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
+                  padding: const EdgeInsets.fromLTRB(80, 12, 80, 12),
                   child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.08, 0.9),
+              alignment: Alignment(0, 0.45),
             ),
 
 
@@ -270,6 +296,11 @@ class _SignInProgressState extends State<SignInProgress> {
               child: TimeDate(),
               alignment: Alignment(1,-1),
             ),
+
+            //Home Button
+            Container(
+              child: HomeButton(),
+            )
           ],
         ),
       ),

@@ -203,7 +203,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                  Container(
                    child: RaisedButton(
                      onPressed: () async {
-/*
+
                          final String Username = UsernameController.text;
                          final String Password = PasswordController.text;
 
@@ -223,13 +223,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                            setState(() {
                              _signIn = signin;
                            });
-                         }*/
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                           builder: (context) => SettingsPage(),
-                         ),
-                       );
+                         }
                        },
 
                      textColor: Colors.white,
@@ -240,9 +234,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                      child: Container(
                        decoration: BoxDecoration(
                          borderRadius: BorderRadius.circular(18),
-                         gradient: LinearGradient(
-                           colors: <Color>[Color(0xff00DBDD), Color(0xff4F7FFF)],
-                         ),
+                           color: Color(0xFF2E368F)
                        ),
                        padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
                        child: const Text('Submit', style: TextStyle(fontSize: 20)),
