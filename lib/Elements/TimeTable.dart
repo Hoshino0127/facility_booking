@@ -263,7 +263,6 @@ class _TimeTableState extends State<TimeTable> {
                                       .data[index].bookingKey
                                       .toString();
                                   Bkey = bookingkey;
-
                                   if (time1130 == starttime &&
                                       stage == "Pending") {
                                     return InkWell(
@@ -527,11 +526,9 @@ class _TimeTableState extends State<TimeTable> {
                                   String bookingkey = snapshot
                                       .data[index].bookingKey
                                       .toString();
+                                  Bkey = bookingkey;
                                   if (time13 == starttime &&
                                       stage == "Pending") {
-                                    setState(() {
-                                      Bkey = bookingkey;
-                                    });
                                     return InkWell(
                                       child: Container(
                                           width: 200,
@@ -617,11 +614,9 @@ class _TimeTableState extends State<TimeTable> {
                                   String bookingkey = snapshot
                                       .data[index].bookingKey
                                       .toString();
+                                  Bkey = bookingkey;
                                   if (time1330 == starttime &&
                                       stage == "Pending") {
-                                    setState(() {
-                                      Bkey = bookingkey;
-                                    });
                                     return InkWell(
                                       child: Container(
                                           width: 200,

@@ -19,12 +19,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
+  final primarycolor = Color(0xFF2E368F);
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Arial',
-        primarySwatch: Colors.blue,
+        primaryColor: primarycolor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),
