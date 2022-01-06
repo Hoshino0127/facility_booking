@@ -204,7 +204,7 @@ class _CancelBookingState extends State<CancelBooking> {
                         snapshot.data.locationFullName,
                         style: new TextStyle(
                             fontSize: 60,
-                            color: Colors.blue,
+                            color: Color(0xFF2E368F),
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       );
@@ -396,7 +396,6 @@ class _CancelBookingState extends State<CancelBooking> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(builder: (BuildContext context) => MeetingInProgress(Bkey)));
-
                   },
                   textColor: Colors.white,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

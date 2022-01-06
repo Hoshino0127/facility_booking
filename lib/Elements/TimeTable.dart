@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:facility_booking/Database/SettingsDB.dart';
 import 'package:facility_booking/inprogresspage/MeetingInProgress.dart';
 import 'package:facility_booking/inprogresspage/SignInProgress.dart';
 import 'package:facility_booking/model/BookingModel.dart';
+import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
 import 'package:flutter/foundation.dart';
@@ -10,23 +12,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-
-Future<List<Booking>> fetchBooking() async {
-  var response = await http.get(
-      Uri.parse(
-          'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=23&StartDateTime=$time11'),
-      // Send authorization headers to the backend.
-      headers: {
-        HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
-      });
-
-  if (response.statusCode == 200) {
-    List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((data) => new Booking.fromJson(data)).toList();
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
+import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 final now = new DateTime.now();
 String formatter = DateFormat('yyyy-MM-dd').format(now);
@@ -39,6 +25,9 @@ String time1330 = "${formatter}T13:30:00Z";
 String time14 = "${formatter}T14:00:00Z";
 String time1430 = "${formatter}T14:30:00Z";
 
+
+
+
 class TimeTable extends StatefulWidget {
   @override
   _TimeTableState createState() => _TimeTableState();
@@ -47,6 +36,28 @@ class TimeTable extends StatefulWidget {
 class _TimeTableState extends State<TimeTable> {
   Future<List<Booking>> futureBooking;
   String Bkey;
+  String a = Constant.Location_Key;
+
+  Future<List<Booking>> fetchBooking() async {
+
+    var response = await http.get(
+        Uri.parse(
+            'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$time11'),
+        // Send authorization headers to the backend.
+        headers: {
+          HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+        });
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => new Booking.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+
+
 
   PendingDialog(BuildContext context) {
     // set up the buttons
@@ -172,11 +183,15 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
+
+
   @override
   void initState() {
     super.initState();
     futureBooking = fetchBooking();
   }
+
+
 
   @override
   Widget build(BuildContext context) {

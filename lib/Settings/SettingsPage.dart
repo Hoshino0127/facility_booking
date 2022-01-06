@@ -9,6 +9,7 @@ import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -379,9 +380,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 final String EndTime =  _time2Controller.text;
                 final String BufferTime = _currentSelectedTime;
                 final String BookingSlot = _currentSelectedBooking;
+                Constant.Location_Key = LKey;
+                print(Constant.Location_Key);
                 var settings = Setting(id: 0, Lkey: LKey, EndTime: EndTime, BufferTime: BufferTime, BookingSlot: BookingSlot);
                 DbManager.db.insertLKey(settings);
-
                 Navigator.push( context, MaterialPageRoute( builder: (context) => MyHomePage()), ).then((value) => setState(() {}));
               },
               textColor: Colors.white,
