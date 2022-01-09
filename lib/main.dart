@@ -13,6 +13,7 @@ import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:facility_booking/Database/SettingsDB.dart';
 import 'model/LocationModel.dart';
+import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 void main() {
   runApp(MyApp());
@@ -43,11 +44,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Future<Locations> futureLocation;
   String EndTime;
-  String Lkey = "23";
+  String a = Constant.Location_Key;
   Future<Locations> fetchLocation() async {
     final response = await http.get(
       Uri.parse(
-          'https://bobtest.optergykl.ga/lucy/location/v1/locations/$Lkey'),
+          'https://bobtest.optergykl.ga/lucy/location/v1/locations/$a'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -127,8 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
               if (snapshot.data != null) {
                 if (snapshot.hasData) {
                   EndTime = snapshot.data[0].EndTime;
-                  Lkey = snapshot.data[0].Lkey;
-                  print(Lkey);
                   return Container(
                     margin: EdgeInsets.only(right: 300.0),
                     width: double.infinity,
