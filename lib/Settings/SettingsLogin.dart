@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:facility_booking/Settings/SettingsPage.dart';
 import 'package:facility_booking/model/SignInModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -257,12 +256,11 @@ class _SettingsLoginState extends State<SettingsLogin> {
                      child: Container(
                        decoration: BoxDecoration(
                          borderRadius: BorderRadius.circular(18),
-                         gradient: LinearGradient(
-                           colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
-                         ),
+                         border: Border.all(color: Color(0xFF2E368F),width: 2.0),
+                         color: Colors.white,
                        ),
                        padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                       child: const Text('Cancel', style: TextStyle(fontSize: 20)),
+                       child: const Text('Cancel', style: TextStyle(fontSize: 20,color: Colors.black)),
                      ),
                    ),
                    alignment: Alignment(0.2, 0.3),

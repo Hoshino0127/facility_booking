@@ -209,13 +209,14 @@ class _TimeTableState extends State<TimeTable> {
                   color: Colors.grey,
                 ),
               ),
+
               TableCell(
                   verticalAlignment: TableCellVerticalAlignment.fill,
                   child: FutureBuilder<List<Booking>>(
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -300,7 +301,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -385,7 +386,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -470,7 +471,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -555,7 +556,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -640,7 +641,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(
@@ -725,7 +726,7 @@ class _TimeTableState extends State<TimeTable> {
                       future: futureBooking,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text(""));
                         } else {
                           return Center(
                             child: ListView.builder(

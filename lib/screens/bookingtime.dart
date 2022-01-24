@@ -308,10 +308,7 @@ class _BookingTimeState extends State<BookingTime> {
             // cancel button
             Container(
               child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TestGet()));
-                },
+                onPressed: () {},
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(
@@ -320,12 +317,11 @@ class _BookingTimeState extends State<BookingTime> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
-                    ),
+                    border: Border.all(color: Color(0xFF2E368F),width: 2.0),
+                   color: Colors.white,
                   ),
                   padding: const EdgeInsets.fromLTRB(70, 12, 70, 12),
-                  child: const Text('Cancel', style: TextStyle(fontSize: 25)),
+                  child: const Text('Cancel', style: TextStyle(fontSize: 25,color: Colors.black)),
                 ),
               ),
               alignment: Alignment(0, 0.6),

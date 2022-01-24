@@ -405,12 +405,11 @@ class _CancelBookingState extends State<CancelBooking> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
-                      gradient: LinearGradient(
-                        colors: <Color>[Color(0xffD3D3D3), Color(0xff9E9E9E)],
-                      ),
+                      border: Border.all(color: Color(0xFF2E368F),width: 2.0),
+                      color: Colors.white,
                     ),
                     padding: const EdgeInsets.fromLTRB(35, 12, 35, 12),
-                    child: const Text('No', style: TextStyle(fontSize: 20)),
+                    child: const Text('No', style: TextStyle(fontSize: 20,color: Colors.black)),
                   ),
                 ),
                 alignment: Alignment(-0.18, 0.78),

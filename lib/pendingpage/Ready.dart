@@ -1,5 +1,6 @@
 import 'package:facility_booking/ApiService/BookingModel.dart';
 import 'package:facility_booking/ApiService/getLocation.dart';
+import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
@@ -439,6 +440,9 @@ class _ReadyToStartState extends State<ReadyToStart> {
               child: TimeDate(),
               alignment: Alignment(1, -1),
             ),
+            Container(
+              child: HomeButton(),
+            )
           ],
         ),
       ),
