@@ -6,13 +6,14 @@ class AvailableBorder extends StatelessWidget {
    return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.green, //                   <--- border color
+          color: Color(0xFF00FF19), //                   <--- border color
           width: 7.0,
         ),
       ),
     );
   }
 }
+
 
 class PendingBorder extends StatelessWidget {
   @override

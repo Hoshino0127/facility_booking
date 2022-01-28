@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:facility_booking/Elements/ScreenBorder.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/model/SettingsModel.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text(
             'AVAILABLE',
             style: new TextStyle(
-                fontSize: 80, color: Color(0xFF2E368F), fontWeight: FontWeight.bold),
+                fontSize: 80, color: Constant.available, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           alignment: Alignment(0, -0.6),
@@ -114,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   textAlign: TextAlign.center,
                 );
               } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
+                return Text('');
               }
               // By default, show a loading spinner.
               return const CircularProgressIndicator();
@@ -232,7 +233,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
         // time table
         Container(
-          child: TimeTable(),
+          margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+          child: TimeTable2(),
+          alignment: Alignment.bottomRight,
         ),
 
         // Settings icon

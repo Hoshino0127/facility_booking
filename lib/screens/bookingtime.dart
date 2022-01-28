@@ -2,6 +2,7 @@ import 'package:facility_booking/ApiService/test.dart';
 import 'package:facility_booking/Elements/HomeButton.dart';
 import 'package:facility_booking/Elements/PinValidation.dart';
 import 'package:facility_booking/Elements/ScreenBorder.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/screens/SignIn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
 import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
+import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 class BookingTime extends StatefulWidget {
   @override
@@ -208,7 +210,7 @@ class _BookingTimeState extends State<BookingTime> {
               child: Text('AVAILABLE',
                   style: new TextStyle(
                       fontSize: 80,
-                      color: Color(0xFF2E368F),
+                      color: Constant.available,
                       fontWeight: FontWeight.bold)),
               alignment: Alignment(0, -0.7),
             ),
@@ -357,8 +359,9 @@ class _BookingTimeState extends State<BookingTime> {
 
             // time table
             Container(
-              child: TimeTable(),
-              alignment: Alignment(1, 1),
+              margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+              child: TimeTable2(),
+              alignment: Alignment.bottomRight,
             ),
 
             // Settings icon

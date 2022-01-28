@@ -21,7 +21,7 @@ class PinPutTest extends StatefulWidget {
 class _PinPutTestState extends State<PinPutTest> {
 
 
-  Future<UserKeyModel> pinValidation(context,snapshot) async {
+  Future<UserKeyModel> pinValidation(context) async {
     final response = await http.get(
       Uri.parse(
           'https://bobtest.optergykl.ga/lucy/user/v1/validatepin?PINCode=$pin'),
@@ -82,8 +82,6 @@ class _PinPutTestState extends State<PinPutTest> {
       body: Center(
           child: Stack(children: <Widget>[
 
-
-
             Container(
               child: AvailableBorder(),
             ),
@@ -129,7 +127,7 @@ class _PinPutTestState extends State<PinPutTest> {
                   child: const Text('Submit', style: TextStyle(fontSize: 25)),
                 ),
               ),
-              alignment: Alignment(-0.45, 0.6),
+              alignment: Alignment(-0.7, 0.6),
             ),
 
             // cancel button
@@ -153,7 +151,7 @@ class _PinPutTestState extends State<PinPutTest> {
                   child: const Text('Clear All', style: TextStyle(fontSize: 25,color: Colors.black)),
                 ),
               ),
-              alignment: Alignment(0, 0.6),
+              alignment: Alignment(-0.2, 0.6),
             ),
             // time table
             Container(
