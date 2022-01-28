@@ -6,7 +6,7 @@ class AvailableBorder extends StatelessWidget {
    return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Color(0xFF2E368F), //                   <--- border color
+          color: Colors.green, //                   <--- border color
           width: 7.0,
         ),
       ),

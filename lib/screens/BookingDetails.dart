@@ -19,7 +19,8 @@ import 'package:http/http.dart' as http;
 class BookingDetails extends StatefulWidget {
   final String Starttime;
   final String Endtime;
-  BookingDetails(this.Starttime, this.Endtime, {Key key}) : super(key: key);
+  final String Username;
+  BookingDetails(this.Starttime, this.Endtime,this.Username, {Key key}) : super(key: key);
 
   @override
   _BookingDetailsState createState() => _BookingDetailsState();
@@ -31,8 +32,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     return key;
   }
 
-  Future<BookingModel> createBooking(context, String Hostname, String Starttime,
+  Future<BookingModel> createBooking(context, String Starttime,
       String Endtime, String Details, String Lkey) async {
+    print(widget.Username);
     final String pathUrl =
         'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings';
 
@@ -46,9 +48,9 @@ class _BookingDetailsState extends State<BookingDetails> {
       "StartDateTime": Starttime,
       "EndDateTime": Endtime,
       "Purpose": Details,
-      "HostObjectKey": "1",
+      "HostObjectKey": "93",
       "HostObjectType": "Organization.OrgStaff",
-      "HostUserFullName": Hostname,
+      "HostUserFullName": widget.Username,
     };
 
     var response = await http.post(
@@ -61,13 +63,13 @@ class _BookingDetailsState extends State<BookingDetails> {
     print("${response.body}");
 
     if (response.statusCode != 200) {
-      _errorlogin(context, response);
+      _errorCreate(context, response);
     } else {
-      _successfullogin(context);
+      _successfulCreate(context);
     }
   }
 
-  void _errorlogin(BuildContext context, response) {
+  void _errorCreate(BuildContext context, response) {
     final alert = AlertDialog(
       title: Text("Error"),
       content: Text("${response.body}"),
@@ -88,7 +90,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     );
   }
 
-  void _successfullogin(BuildContext context) {
+  void _successfulCreate(BuildContext context) {
     final alert = AlertDialog(
       title: Text("Successful"),
       content: Text("A booking has been created"),
@@ -188,26 +190,6 @@ class _BookingDetailsState extends State<BookingDetails> {
               alignment: Alignment(0, 0.8),
             ),
 
-            //HostName text box
-            Container(
-              padding: EdgeInsets.fromLTRB(180, 12, 580, 12),
-              child: TextFormField(
-                controller: HostController,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(),
-                  labelText: 'Host Name',
-                ),
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return 'Host Name is empty';
-                  }
-                  return null;
-                },
-              ),
-              alignment: Alignment(-0.8, -0.4),
-            ),
 
             // Booking Details
             Container(
@@ -236,13 +218,12 @@ class _BookingDetailsState extends State<BookingDetails> {
               child: RaisedButton(
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    final String Hostname = HostController.text;
                     final String Details = DetailsController.text;
                     final String Starttime = widget.Starttime;
                     final String Endtime = widget.Endtime;
 
                     BookingModel booking = await createBooking(
-                        context, Hostname, Starttime, Endtime, Details, Lkey);
+                        context, Starttime, Endtime, Details, Lkey);
 
                     setState(() {
                       _booking = booking;

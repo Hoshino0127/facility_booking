@@ -1,5 +1,6 @@
 import 'package:facility_booking/ApiService/test.dart';
 import 'package:facility_booking/Elements/HomeButton.dart';
+import 'package:facility_booking/Elements/PinValidation.dart';
 import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/screens/SignIn.dart';
 import 'package:flutter/cupertino.dart';
@@ -308,7 +309,14 @@ class _BookingTimeState extends State<BookingTime> {
             // cancel button
             Container(
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PinPutTest(),
+                    ),
+                  );
+                },
                 textColor: Colors.white,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 shape: RoundedRectangleBorder(

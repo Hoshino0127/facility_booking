@@ -76,6 +76,7 @@ class _TimeTableState extends State<TimeTable> {
     Widget continueButton = TextButton(
       child: Text("Cancel Booking"),
       onPressed: () {
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -189,6 +190,7 @@ class _TimeTableState extends State<TimeTable> {
   void initState() {
     super.initState();
     futureBooking = fetchBooking();
+
   }
 
 
@@ -245,7 +247,7 @@ class _TimeTableState extends State<TimeTable> {
                                                 color: Colors.white,
                                               ),
                                               textAlign: TextAlign.center)),
-                                      onTap: () => PendingDialog(context),
+                                      onTap: () =>  PendingDialog(context),
                                     );
                                   } else if (time11 == starttime &&
                                       stage == "Finalized") {

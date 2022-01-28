@@ -36,7 +36,7 @@ class _SignInState extends State<SignIn> {
     };
 
     var body = {
-      "LoginID": "Xenber",
+      "LoginID": Username,
       "Password": "aN2TJ2qJEF",
     };
 
@@ -49,10 +49,12 @@ class _SignInState extends State<SignIn> {
     print("${response.statusCode}");
     print("${response.body}");
 
+
     if (response.statusCode != 200) {
-      _errorlogin(context);
+      _errorlogin(context, );
     } else {
-      _successfullogin(context);
+      _successfullogin(context, Username);
+      return SignInModel.fromJson(json.decode(response.body));
     }
   }
 
@@ -77,7 +79,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  void _successfullogin(BuildContext context) {
+  void _successfullogin(BuildContext context, Username) {
     final alert = AlertDialog(
       title: Text("Successful"),
       content: Text("Successful login"),
@@ -89,7 +91,7 @@ class _SignInState extends State<SignIn> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      BookingDetails(widget.Starttime, widget.Endtime),
+                      BookingDetails(widget.Starttime, widget.Endtime, Username),
                 ),
               );
             })
@@ -106,6 +108,7 @@ class _SignInState extends State<SignIn> {
 
   TextEditingController UsernameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
+
 
   SignInModel _signIn;
   final _formKey = GlobalKey<FormState>();
@@ -132,6 +135,7 @@ class _SignInState extends State<SignIn> {
                       fontWeight: FontWeight.bold)),
               alignment: Alignment(0, -0.7),
             ),
+
 
             // center box
             Container(

@@ -40,6 +40,7 @@ dev_dependencies:
   datetime_picker_formfield: ^1.0.0
   date_format: ^1.0.9
   dio: ^3.0.0
+  pinput: ^1.0.0
   flutter_test:
     sdk: flutter
 
