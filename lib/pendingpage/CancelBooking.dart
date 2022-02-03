@@ -6,6 +6,7 @@ import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/inprogresspage/MeetingInProgress.dart';
 import 'package:facility_booking/model/BookingModel.dart';
 import 'package:flutter/material.dart';
@@ -417,8 +418,9 @@ class _CancelBookingState extends State<CancelBooking> {
 
               // time table
               Container(
-                child: TimeTable(),
-                alignment: Alignment(1, 1),
+                margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+                child: TimeTable2(),
+                alignment: Alignment.bottomRight,
               ),
 
               // Settings icon

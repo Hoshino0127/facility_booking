@@ -5,6 +5,7 @@ import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/model/SignInModel.dart';
 import 'package:facility_booking/pendingpage/Ready.dart';
 import 'package:facility_booking/screens/BookingDetails.dart';
@@ -13,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 class SignIn extends StatefulWidget {
   // passing parameters from booking time page
@@ -131,7 +133,7 @@ class _SignInState extends State<SignIn> {
               child: Text('AVAILABLE',
                   style: new TextStyle(
                       fontSize: 80,
-                      color: Color(0xFF2E368F),
+                      color: Constant.available,
                       fontWeight: FontWeight.bold)),
               alignment: Alignment(0, -0.7),
             ),
@@ -259,8 +261,9 @@ class _SignInState extends State<SignIn> {
 
             // time table
             Container(
-              child: TimeTable(),
-              alignment: Alignment(1, 1),
+              margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+              child: TimeTable2(),
+              alignment: Alignment.bottomRight,
             ),
 
             // Settings icon

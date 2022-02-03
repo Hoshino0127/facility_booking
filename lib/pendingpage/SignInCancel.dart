@@ -4,6 +4,7 @@ import 'package:facility_booking/Elements/Info.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/model/SignInModel.dart';
 import 'package:facility_booking/pendingpage/CancelBooking.dart';
 import 'package:facility_booking/screens/bookingtime.dart';
@@ -274,8 +275,9 @@ class _SignInCancelState extends State<SignInCancel> {
 
             // time table
             Container(
-              child: TimeTable(),
-              alignment: Alignment(1, 1),
+              margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+              child: TimeTable2(),
+              alignment: Alignment.bottomRight,
             ),
 
             // Settings icon

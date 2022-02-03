@@ -6,6 +6,7 @@ import 'package:facility_booking/Elements/ScreenBorder.dart';
 import 'package:facility_booking/Elements/Settings.dart';
 import 'package:facility_booking/Elements/TimeDate.dart';
 import 'package:facility_booking/Elements/TimeTable.dart';
+import 'package:facility_booking/Elements/TimeTable2.dart';
 import 'package:facility_booking/main.dart';
 import 'package:facility_booking/model/LocationModel.dart';
 import 'package:facility_booking/pendingpage/SignInCancel.dart';
@@ -365,31 +366,7 @@ class _ReadyToStartState extends State<ReadyToStart> {
               alignment: Alignment(0, 0.4),
             ),
 
-            // book button
-            Container(
-              child: RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    BookSession(context);
-                  }
-                },
-                textColor: Colors.white,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(18.0),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                      color: Color(0xFF2E368F)
-                  ),
-                  padding: const EdgeInsets.fromLTRB(50, 12, 50, 12),
-                  child: const Text('       Book         ',
-                      style: TextStyle(fontSize: 20)),
-                ),
-              ),
-              alignment: Alignment(-0.4, 0.6),
-            ),
+
 
             // confirm to start button
             Container(
@@ -414,13 +391,14 @@ class _ReadyToStartState extends State<ReadyToStart> {
                       style: TextStyle(fontSize: 20)),
                 ),
               ),
-              alignment: Alignment(-0.4, 0.8),
+              alignment: Alignment(-0.4, 0.6),
             ),
 
             // time table
             Container(
-              child: TimeTable(),
-              alignment: Alignment(1, 1),
+              margin: EdgeInsets.fromLTRB(0, 250, 10, 10),
+              child: TimeTable2(),
+              alignment: Alignment.bottomRight,
             ),
 
             // Settings icon

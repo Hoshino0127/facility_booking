@@ -341,7 +341,34 @@ class _TimeTableState extends State<TimeTable2> {
                       }else{
 
                         if(!bookingSnapshot.hasData){
-                          return Text("no booking found");
+                          return Container(
+                            child: new Row(
+                              children: [
+                                new Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(30),
+                                      width: 200,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: Colors.grey[400])
+                                      ),
+                                      child: Text(
+                                        toDateTimePeriodFromUtcIso8601String(currentTime.toString()),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
                         }
 
                         for(int i = 0; i <= bookingSnapshot.data.length - 1; i++){

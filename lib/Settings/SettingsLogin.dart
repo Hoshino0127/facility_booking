@@ -203,6 +203,13 @@ class _SettingsLoginState extends State<SettingsLogin> {
                    child: RaisedButton(
                      onPressed: () async {
 
+                        Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => SettingsPage(),
+                         ),
+                       );
+/*
                          final String Username = UsernameController.text;
                          final String Password = PasswordController.text;
 
@@ -222,7 +229,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                            setState(() {
                              _signIn = signin;
                            });
-                         }
+                         }*/
                        },
 
                      textColor: Colors.white,
