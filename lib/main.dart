@@ -66,7 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<List<Setting>> getSettings() async {
-    Future<List<Setting>> key = DbManager.db.getSettings();
+    Future<List<Setting>> key;
+    if(Constant.Location_Key != ""){
+      key = DbManager.db.getSettingsByKey(Constant.Location_Key);
+    }
     return key;
   }
 

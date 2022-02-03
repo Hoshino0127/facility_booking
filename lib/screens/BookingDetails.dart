@@ -32,7 +32,10 @@ class BookingDetails extends StatefulWidget {
 
 class _BookingDetailsState extends State<BookingDetails> {
   Future<List<Setting>> getSettings() async {
-    Future<List<Setting>> key = DbManager.db.getSettings();
+    Future<List<Setting>> key;
+    if(Constant.Location_Key != ""){
+      key = DbManager.db.getSettingsByKey(Constant.Location_Key);
+    }
     return key;
   }
 
@@ -225,6 +228,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
                               setState(() {
                                 _booking = booking;
+                                Constant.selectedDateTimeList.clear();
                               });
                             }
                           },

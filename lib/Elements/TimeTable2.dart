@@ -53,20 +53,59 @@ class TimeTable2 extends StatefulWidget{
 class _TimeTableState extends State<TimeTable2> {
   Future<List<Booking>> futureBooking;
   Future<List<String>> timeSlotsList;
+
   List<Setting> settings;
   String Bkey;
   String a = Constant.Location_Key;
   String userKey = Constant.User_Key;
+
+
   int bookingSlotsTimeRange = 0;
+  int xTotal = 0;
+
+  Future<int> getBookingCount() async {
+    int xTotal = 0;
+    String nowDate = dateFormatter + "T" + timeFormatter + "Z";
+    String endDate = dateFormatter + "T23:59:59Z";
+
+    final response = await http.get(
+      //get the response with max=1 to reduce the API load
+      Uri.parse(
+          'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$nowDate&EndDateTime=$endDate&max=1'
+      ),
+      headers: {
+        HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (response.headers['X-Total-Count'] != "") {
+        xTotal = int.parse(response.headers['X-Total-Count']);
+      }
+    }
+
+    return xTotal;
+  }
 
   Future<List<String>> getTimeSlots() async{
     //settings = await DbManager.db.getSettings();
     NumberFormat formatter = new NumberFormat("00");
     List<String> timeSlots = [];
+    List<Setting> testing = await DbManager.db.getSettings();
+    print("Testing " + testing.toString() + "Count " + testing.length.toString());
+    List<Setting> locationSettings = await DbManager.db.getSettingsByKey(Constant.Location_Key);
+    String bookingSlotFound = "";
+    String endTimeFound = "";
+
+    if (locationSettings != null){
+      print("Settings " + locationSettings.toString());
+      bookingSlotFound = locationSettings[0].BookingSlot;
+      endTimeFound = locationSettings[0].EndTime;
+    }
 
     bookingSlotsTimeRange = 60;
-    if(Constant.BookingSlot != ""){
-      if (Constant.BookingSlot == "1 Hour"){
+    if(bookingSlotFound != ""){
+      if (bookingSlotFound == "1 Hour"){
         bookingSlotsTimeRange = 60;
       }else{
         bookingSlotsTimeRange = 30;
@@ -74,10 +113,11 @@ class _TimeTableState extends State<TimeTable2> {
     }
 
     String strEndTime = "${dateFormatter}T23:59:00Z";
-    if(Constant.EndTime != ""){
-      int hour = int.parse(Constant.EndTime.substring(0,2));
-      int minute = int.parse(Constant.EndTime.substring(3,5));
-      String ampm = Constant.EndTime.substring(6,8);
+    if(endTimeFound != ""){
+      //split the time to hours and minutes for formatting
+      int hour = int.parse(endTimeFound.substring(0,2));
+      int minute = int.parse(endTimeFound.substring(3,5));
+      String ampm = endTimeFound.substring(6,8);
 
       //12 hour format to 24 hour
       if(ampm == "PM"){
@@ -90,20 +130,27 @@ class _TimeTableState extends State<TimeTable2> {
     DateTime currentTime = DateTime.now().roundDown(delta: Duration(minutes: bookingSlotsTimeRange));
     DateTime endTime = DateTime.parse(strEndTime);
 
+    //print(endTime.toString());
     do{
       timeSlots.add(currentTime.toString());
       currentTime = currentTime.add(Duration(minutes: bookingSlotsTimeRange));
 
     }while ((currentTime).compareTo(endTime) < 0);
 
+
     return timeSlots;
   }
 
   Future<List<Booking>> fetchBooking() async {
-    String nowDate = dateFormatter + "T" + timeFormatter + "Z";
+    //xTotal = await getBookingCount();
+    xTotal = 10;
+
+    DateTime currentTime = DateTime.now().roundDown(delta: Duration(minutes: 60));
+    String nowDate = dateFormatter + "T" + DateFormat("hh:mm:ss").format(currentTime) + "Z";
+    String endDate = dateFormatter + "T23:59:59Z";
     var response = await http.get(
         Uri.parse(
-            'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$nowDate&max=20'),
+            'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$nowDate&EndDateTime=$endDate&max=$xTotal'),
         // Send authorization headers to the backend.
         headers: {
           HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -255,16 +302,103 @@ class _TimeTableState extends State<TimeTable2> {
     return false;
   }
 
-  callDialogs(BuildContext context, String status, String bookingKey, String hostObjectKey){
-    print("test");
+  callDialogs(BuildContext context, String status, String bookingKey, String hostObjectKey, DateTime startTime, DateTime endTime){
+
+    DateTime currentStartTime;
+    DateTime currentEndTime;
+    DateTime selectedStartTime;
+    DateTime selectedEndTime;
+    bool isFound = false;
+
+    //set the current booking key to BKey for further actions
     setState(() {
       Bkey = bookingKey;
     });
+
+    //when the slot is available
     if(status == ""){
+
+      //start of select/deselect timeslots
+      if(Constant.selectedDateTimeList.length != 0){
+        for(int i = 0; i < Constant.selectedDateTimeList.length; i++){
+          Map<String,DateTime> selectedDateTime = Constant.selectedDateTimeList[i];
+          selectedStartTime = selectedDateTime['startTime'];
+          selectedEndTime = selectedDateTime['endTime'];
+
+          if(currentStartTime != null && currentEndTime != null){
+            if(selectedStartTime.compareTo(currentStartTime) < 0){
+              currentStartTime = selectedStartTime;
+            }
+
+            if(selectedEndTime.compareTo(currentEndTime) > 0){
+              currentEndTime = selectedEndTime;
+            }
+          }else{
+            currentStartTime = selectedStartTime;
+            currentEndTime = selectedEndTime;
+          }
+
+        }
+
+        //after knowing the current start and end, see if the selected one is before or after the selection
+        //if before, set the currentStartTime earlier
+        if(startTime.compareTo(currentStartTime) < 0){
+          currentStartTime = startTime;
+        }else{
+          if(endTime.isBefore(currentEndTime)){
+            currentStartTime = endTime;
+          }
+        }
+
+        //if after, set the currentEndTime later
+        if(endTime.compareTo(currentEndTime) > 0){
+          currentEndTime = endTime;
+        }else{
+          if(startTime.isAfter(currentStartTime)){
+            currentEndTime = startTime;
+          }
+        }
+
+        //deselect the last timeslot
+        if(Constant.selectedDateTimeList.length == 1
+            && Constant.selectedDateTimeList[0]['startTime'] == startTime
+            && Constant.selectedDateTimeList[0]['endTime'] == endTime ){
+          Constant.selectedDateTimeList.clear();
+          currentStartTime = null;
+          currentEndTime = null;
+        }else{
+          DateTime startTimeDoWhile = currentStartTime;
+          Constant.selectedDateTimeList.clear(); //reset list
+          do{
+            Map<String, DateTime> dtMap = {};
+            dtMap['startTime'] = startTimeDoWhile;
+            dtMap['endTime'] = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
+            Constant.selectedDateTimeList.add(dtMap);
+            startTimeDoWhile = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
+          }while((startTimeDoWhile).compareTo(currentEndTime) < 0);
+        }
+
+      }else{
+        currentStartTime = startTime;
+        currentEndTime = endTime;
+
+        Map<String, DateTime> dtMap = {};
+        dtMap['startTime'] = startTime;
+        dtMap['endTime'] = endTime;
+        Constant.selectedDateTimeList.add(dtMap);
+      }
+
+
+      print("Current start time: " + currentStartTime.toString());
+      print("Current end time: " + currentEndTime.toString());
+      print(Constant.selectedDateTimeList);
+
+      //end of select/deselect timeslots
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BookingTime(),
+          builder: (context) => BookingTime(startTime: currentStartTime, endTime: currentEndTime,),
         ),);
     }else{
       if(hostObjectKey == userKey){
@@ -272,7 +406,7 @@ class _TimeTableState extends State<TimeTable2> {
           PendingDialog(context);
         }else if(status == "Finalized"){
           BookedDialog(context);
-        }else if(status == "InProgress"){
+        }else if(status == "In Progress"){
           InProgressDialog(context);
         }
       }else{
@@ -290,6 +424,7 @@ class _TimeTableState extends State<TimeTable2> {
 
     //currently userKey retrieval is still under development, so the userKey is hardcoded for now
     //later, a function will be created to get the userKey of the current login user
+    //print(DbManager.db.deleteSettings().toString());
     userKey = "1";
     timeSlotsList = getTimeSlots();
     futureBooking = fetchBooking();
@@ -328,6 +463,8 @@ class _TimeTableState extends State<TimeTable2> {
                   String bookingKey = "";
                   String statusText = "";
                   Color statusColor = Colors.white;
+
+                  bool isSelected = false;
 
                   return FutureBuilder<List<Booking>>(
                     future: futureBooking,
@@ -420,6 +557,20 @@ class _TimeTableState extends State<TimeTable2> {
                               }
                             }
                           }
+                          if(statusText == ""){
+                            for(int i = 0; i < Constant.selectedDateTimeList.length; i++) {
+                              Map<String, DateTime> selectedDateTime = Constant
+                                  .selectedDateTimeList[i];
+                              DateTime selectedStartTime = selectedDateTime['startTime'];
+                              DateTime selectedEndTime = selectedDateTime['endTime'];
+
+                              if(selectedStartTime == currentTime){
+
+                                statusColor = Colors.grey;
+
+                              }
+                            }
+                          }
                         }
                         return Container(
                           child: new Row(
@@ -463,7 +614,19 @@ class _TimeTableState extends State<TimeTable2> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    onTap: () => callDialogs(context, statusText, bookingKey, hostObjectKey),
+                                    onTap: () {
+                                      // setState(() {
+                                      //   isSelected = isSelected != true;
+                                      // });
+                                      callDialogs(
+                                          context,
+                                          statusText,
+                                          bookingKey,
+                                          hostObjectKey,
+                                          currentTime,
+                                          currentTime.add(new Duration(minutes: bookingSlotsTimeRange))
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

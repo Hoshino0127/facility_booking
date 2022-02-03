@@ -17,8 +17,11 @@ import 'package:f_datetimerangepicker/f_datetimerangepicker.dart';
 import 'package:facility_booking/Elements/Constants.dart' as Constant;
 
 class BookingTime extends StatefulWidget {
+  final DateTime startTime;
+  final DateTime endTime;
+  BookingTime({Key key, @required this.startTime, @required this.endTime}) : super(key: key);
   @override
-  _BookingTimeState createState() => _BookingTimeState();
+  _BookingTimeState createState() => _BookingTimeState(startTime, endTime);
 }
 
 class _BookingTimeState extends State<BookingTime> {
@@ -28,6 +31,11 @@ class _BookingTimeState extends State<BookingTime> {
   TimeOfDay time;
   DateTime StartTime;
   DateTime EndTime;
+
+  _BookingTimeState(DateTime startTime, DateTime endTime){
+    this.StartTime = startTime;
+    this.EndTime = endTime;
+  }
 
   Future<DateTime> pickDate(BuildContext context) async {
     final initialDate = DateTime.now();
