@@ -46,6 +46,7 @@ extension on DateTime{
 }
 
 class TimeTable2 extends StatefulWidget{
+
   @override
   _TimeTableState createState() => _TimeTableState();
 }
@@ -59,19 +60,23 @@ class _TimeTableState extends State<TimeTable2> {
   String a = Constant.Location_Key;
   String userKey = Constant.User_Key;
 
-
   int bookingSlotsTimeRange = 0;
   int xTotal = 0;
 
-  Future<int> getBookingCount() async {
+  final ValueNotifier<List<Map<String,DateTime>>> selectedDateTimeListListener = ValueNotifier<List<Map<String,DateTime>>>([]);
+
+
+  Future<int> getBookingCount(DateTime startDate, DateTime endDate) async {
     int xTotal = 0;
-    String nowDate = dateFormatter + "T" + timeFormatter + "Z";
-    String endDate = dateFormatter + "T23:59:59Z";
+    String strStartDate = DateFormat("yyyy-MM-dd").format(startDate) + "T" + DateFormat("hh:mm:ss").format(startDate) + "Z";
+    String strEndDate = DateFormat("yyyy-MM-dd").format(endDate) + "T" + DateFormat("hh:mm:ss").format(endDate) + "Z";
+
+    //print("Date for bookingCount" + strStartDate.toString() + " " + strEndDate.toString());
 
     final response = await http.get(
       //get the response with max=1 to reduce the API load
       Uri.parse(
-          'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$nowDate&EndDateTime=$endDate&max=1'
+          'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$strStartDate&EndDateTime=$strEndDate&max=1'
       ),
       headers: {
         HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -79,8 +84,8 @@ class _TimeTableState extends State<TimeTable2> {
     );
 
     if (response.statusCode == 200) {
-      if (response.headers['X-Total-Count'] != "") {
-        xTotal = int.parse(response.headers['X-Total-Count']);
+      if (response.headers['x-total-count'] != "") {
+        xTotal = int.parse(response.headers['x-total-count']);
       }
     }
 
@@ -92,13 +97,13 @@ class _TimeTableState extends State<TimeTable2> {
     NumberFormat formatter = new NumberFormat("00");
     List<String> timeSlots = [];
     List<Setting> testing = await DbManager.db.getSettings();
-    print("Testing " + testing.toString() + "Count " + testing.length.toString());
+    //print("Testing " + testing.toString() + "Count " + testing.length.toString());
     List<Setting> locationSettings = await DbManager.db.getSettingsByKey(Constant.Location_Key);
     String bookingSlotFound = "";
     String endTimeFound = "";
 
     if (locationSettings != null){
-      print("Settings " + locationSettings.toString());
+      //print("Settings " + locationSettings.toString());
       bookingSlotFound = locationSettings[0].BookingSlot;
       endTimeFound = locationSettings[0].EndTime;
     }
@@ -135,22 +140,22 @@ class _TimeTableState extends State<TimeTable2> {
       timeSlots.add(currentTime.toString());
       currentTime = currentTime.add(Duration(minutes: bookingSlotsTimeRange));
 
-    }while ((currentTime).compareTo(endTime) < 0);
+    }while (currentTime.add(Duration(minutes: bookingSlotsTimeRange)).compareTo(endTime) <= 0);
 
 
     return timeSlots;
   }
 
-  Future<List<Booking>> fetchBooking() async {
-    //xTotal = await getBookingCount();
-    xTotal = 10;
+  Future<List<Booking>> fetchBooking(DateTime startDate, DateTime endDate) async {
+    xTotal = await getBookingCount(startDate, endDate);
+    //xTotal = 10;
+    print(xTotal);
 
-    DateTime currentTime = DateTime.now().roundDown(delta: Duration(minutes: 60));
-    String nowDate = dateFormatter + "T" + DateFormat("hh:mm:ss").format(currentTime) + "Z";
-    String endDate = dateFormatter + "T23:59:59Z";
+    String strStartDate = DateFormat("yyyy-MM-dd").format(startDate) + "T" + DateFormat("hh:mm:ss").format(startDate) + "Z";
+    String strEndDate = DateFormat("yyyy-MM-dd").format(endDate) + "T" + DateFormat("hh:mm:ss").format(endDate) + "Z";
     var response = await http.get(
         Uri.parse(
-            'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$nowDate&EndDateTime=$endDate&max=$xTotal'),
+            'https://bobtest.optergykl.ga/lucy/facilitybooking/v1/bookings?LocationKey=$a&StartDateTime=$strStartDate&EndDateTime=$strEndDate&max=$xTotal'),
         // Send authorization headers to the backend.
         headers: {
           HttpHeaders.authorizationHeader: 'SC:epf:8425db95834f9c7f',
@@ -288,6 +293,33 @@ class _TimeTableState extends State<TimeTable2> {
     );
   }
 
+  timeSlotClashedDialog(BuildContext context){
+    //set up the buttons
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Selected time slot clashed"),
+      content: Text("Please select the time slot range with no booked time slots in it"),
+      actions: [
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   bool checkTime(DateTime currentTime, DateTime startTime, DateTime endTime){
 
     int currentStartTimeMin = currentTime.hour * 60 + currentTime.minute;
@@ -296,7 +328,6 @@ class _TimeTableState extends State<TimeTable2> {
     int endTimeMin = endTime.hour * 60 + endTime.minute;
 
     if (startTimeMin < currentEndTimeMin && endTimeMin > currentStartTimeMin){
-      //print("s " + startTimeMin.toString() + ",csm " + currentStartTimeMin.toString() + ",e " + endTimeMin.toString() + ",cem " + currentEndTimeMin.toString());
       return true;
     }
     return false;
@@ -304,11 +335,7 @@ class _TimeTableState extends State<TimeTable2> {
 
   callDialogs(BuildContext context, String status, String bookingKey, String hostObjectKey, DateTime startTime, DateTime endTime){
 
-    DateTime currentStartTime;
-    DateTime currentEndTime;
-    DateTime selectedStartTime;
-    DateTime selectedEndTime;
-    bool isFound = false;
+
 
     //set the current booking key to BKey for further actions
     setState(() {
@@ -318,88 +345,8 @@ class _TimeTableState extends State<TimeTable2> {
     //when the slot is available
     if(status == ""){
 
-      //start of select/deselect timeslots
-      if(Constant.selectedDateTimeList.length != 0){
-        for(int i = 0; i < Constant.selectedDateTimeList.length; i++){
-          Map<String,DateTime> selectedDateTime = Constant.selectedDateTimeList[i];
-          selectedStartTime = selectedDateTime['startTime'];
-          selectedEndTime = selectedDateTime['endTime'];
+      setSelectedTimeSlots(startTime,endTime);
 
-          if(currentStartTime != null && currentEndTime != null){
-            if(selectedStartTime.compareTo(currentStartTime) < 0){
-              currentStartTime = selectedStartTime;
-            }
-
-            if(selectedEndTime.compareTo(currentEndTime) > 0){
-              currentEndTime = selectedEndTime;
-            }
-          }else{
-            currentStartTime = selectedStartTime;
-            currentEndTime = selectedEndTime;
-          }
-
-        }
-
-        //after knowing the current start and end, see if the selected one is before or after the selection
-        //if before, set the currentStartTime earlier
-        if(startTime.compareTo(currentStartTime) < 0){
-          currentStartTime = startTime;
-        }else{
-          if(endTime.isBefore(currentEndTime)){
-            currentStartTime = endTime;
-          }
-        }
-
-        //if after, set the currentEndTime later
-        if(endTime.compareTo(currentEndTime) > 0){
-          currentEndTime = endTime;
-        }else{
-          if(startTime.isAfter(currentStartTime)){
-            currentEndTime = startTime;
-          }
-        }
-
-        //deselect the last timeslot
-        if(Constant.selectedDateTimeList.length == 1
-            && Constant.selectedDateTimeList[0]['startTime'] == startTime
-            && Constant.selectedDateTimeList[0]['endTime'] == endTime ){
-          Constant.selectedDateTimeList.clear();
-          currentStartTime = null;
-          currentEndTime = null;
-        }else{
-          DateTime startTimeDoWhile = currentStartTime;
-          Constant.selectedDateTimeList.clear(); //reset list
-          do{
-            Map<String, DateTime> dtMap = {};
-            dtMap['startTime'] = startTimeDoWhile;
-            dtMap['endTime'] = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
-            Constant.selectedDateTimeList.add(dtMap);
-            startTimeDoWhile = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
-          }while((startTimeDoWhile).compareTo(currentEndTime) < 0);
-        }
-
-      }else{
-        currentStartTime = startTime;
-        currentEndTime = endTime;
-
-        Map<String, DateTime> dtMap = {};
-        dtMap['startTime'] = startTime;
-        dtMap['endTime'] = endTime;
-        Constant.selectedDateTimeList.add(dtMap);
-      }
-
-
-      print("Current start time: " + currentStartTime.toString());
-      print("Current end time: " + currentEndTime.toString());
-      print(Constant.selectedDateTimeList);
-
-      //end of select/deselect timeslots
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BookingTime(startTime: currentStartTime, endTime: currentEndTime,),
-        ),);
     }else{
       if(hostObjectKey == userKey){
         if(status == "Pending"){
@@ -418,6 +365,106 @@ class _TimeTableState extends State<TimeTable2> {
 
   }
 
+  setSelectedTimeSlots(DateTime startTime, DateTime endTime) async{
+
+    DateTime currentStartTime;
+    DateTime currentEndTime;
+    DateTime selectedStartTime;
+    DateTime selectedEndTime;
+    bool isFound = false;
+    bool clashedFlag = false;
+    bool isRemoved = false;
+
+    Map<String, DateTime> mapSelectedSlot = {};
+    mapSelectedSlot['startTime'] = startTime;
+    mapSelectedSlot['endTime'] = endTime;
+
+    if(Constant.selectedDateTimeList.length > 0){
+
+      //deselect the first or last slot
+      Map<String,DateTime> firstSlot = Constant.selectedDateTimeList[0];
+      Map<String,DateTime> lastSlot = Constant.selectedDateTimeList[Constant.selectedDateTimeList.length - 1];
+
+      if(mapSelectedSlot['startTime'] == firstSlot['startTime'] && mapSelectedSlot['endTime'] == firstSlot['endTime']){
+        Constant.selectedDateTimeList.removeAt(0);
+        isRemoved = true;
+
+      }else if(mapSelectedSlot['startTime'] == lastSlot['startTime'] && mapSelectedSlot['endTime'] == lastSlot['endTime']){
+        Constant.selectedDateTimeList.removeAt(Constant.selectedDateTimeList.length - 1);
+        isRemoved = true;
+
+      }
+
+      if(Constant.selectedDateTimeList.length > 0){
+        //as the list is always arranged
+        //the currentStartTime should be in list[0]
+        currentStartTime = Constant.selectedDateTimeList[0]['startTime'];
+
+        //the currentEndTime should be in list[list.length-1]
+        currentEndTime = Constant.selectedDateTimeList[Constant.selectedDateTimeList.length - 1]['endTime'];
+
+        print("List" + Constant.selectedDateTimeList.toString());
+        print("Current start " + currentStartTime.toString());
+        print("Current end " + currentEndTime.toString());
+
+        if(!isRemoved){
+          //after knowing the current start and end, see if the selected one is before or after the selection
+          //if before, set the currentStartTime earlier
+          if(startTime.compareTo(currentStartTime) < 0){
+            currentStartTime = startTime;
+          }
+
+          //if after, set the currentEndTime later
+          if(endTime.compareTo(currentEndTime) > 0){
+            currentEndTime = endTime;
+          }
+        }
+
+        //then, check if the time clashes with any booking
+        List<Booking> existingBookingList = await fetchBooking(currentStartTime, currentEndTime);
+        if(existingBookingList.length == 0){
+          //no clashed booking
+
+          //create the list of selected slots
+          DateTime startTimeDoWhile = currentStartTime;
+          Constant.selectedDateTimeList.clear(); //reset list
+          do{
+            Map<String, DateTime> dtMap = {};
+            dtMap['startTime'] = startTimeDoWhile;
+            dtMap['endTime'] = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
+            Constant.selectedDateTimeList.add(dtMap);
+            startTimeDoWhile = startTimeDoWhile.add(new Duration(minutes: bookingSlotsTimeRange));
+          }while((startTimeDoWhile).compareTo(currentEndTime) < 0);
+
+        }else{
+          clashedFlag = true;
+
+        }
+      }else{
+        currentStartTime = null;
+        currentEndTime = null;
+      }
+    }else{
+      //when there is nothing inside the list, straight add into the list
+      currentStartTime = startTime;
+      currentEndTime = endTime;
+
+
+      Constant.selectedDateTimeList.add(mapSelectedSlot);
+    }
+
+    if (clashedFlag){
+      timeSlotClashedDialog(context);
+    }else{
+      selectedDateTimeListListener.value = Constant.selectedDateTimeList;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingTime(startTime: currentStartTime, endTime: currentEndTime,),
+        ),);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -425,9 +472,14 @@ class _TimeTableState extends State<TimeTable2> {
     //currently userKey retrieval is still under development, so the userKey is hardcoded for now
     //later, a function will be created to get the userKey of the current login user
     //print(DbManager.db.deleteSettings().toString());
+
     userKey = "1";
+
+    DateTime startTime = DateTime.now().roundDown(delta: Duration(minutes: 60));
+    DateTime endTime = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
     timeSlotsList = getTimeSlots();
-    futureBooking = fetchBooking();
+    futureBooking = fetchBooking(startTime,endTime);
   }
 
   @override
@@ -464,7 +516,7 @@ class _TimeTableState extends State<TimeTable2> {
                   String statusText = "";
                   Color statusColor = Colors.white;
 
-                  bool isSelected = false;
+                  bool isFound = false;
 
                   return FutureBuilder<List<Booking>>(
                     future: futureBooking,
@@ -485,7 +537,7 @@ class _TimeTableState extends State<TimeTable2> {
                                   children: [
                                     Container(
                                       padding: EdgeInsets.all(30),
-                                      width: 200,
+                                      width: 150,
                                       height: 100,
                                       decoration: BoxDecoration(
                                           color: Colors.white,
@@ -540,35 +592,39 @@ class _TimeTableState extends State<TimeTable2> {
                                 case 'Pending':{
                                   statusText = "Pending";
                                   statusColor = colorPending;
+                                  isFound = true;
                                 }
                                 break;
 
                                 case 'Finalized':{
                                   statusText = "Finalized";
                                   statusColor = colorFinalized;
+                                  isFound = true;
                                 }
                                 break;
 
                                 case 'InProgress':{
                                   statusText = "In Progress";
                                   statusColor = colorInProgress;
+                                  isFound = true;
                                 }
                                 break;
                               }
                             }
                           }
-                          if(statusText == ""){
-                            for(int i = 0; i < Constant.selectedDateTimeList.length; i++) {
-                              Map<String, DateTime> selectedDateTime = Constant
-                                  .selectedDateTimeList[i];
-                              DateTime selectedStartTime = selectedDateTime['startTime'];
-                              DateTime selectedEndTime = selectedDateTime['endTime'];
 
-                              if(selectedStartTime == currentTime){
+                        }
+                        if(!isFound){
+                          for(int i = 0; i < Constant.selectedDateTimeList.length; i++) {
+                            Map<String, DateTime> selectedDateTime = Constant
+                                .selectedDateTimeList[i];
+                            DateTime selectedStartTime = selectedDateTime['startTime'];
+                            DateTime selectedEndTime = selectedDateTime['endTime'];
 
-                                statusColor = Colors.grey;
+                            if(selectedStartTime == currentTime){
 
-                              }
+                              statusColor = Colors.grey;
+
                             }
                           }
                         }
@@ -579,7 +635,7 @@ class _TimeTableState extends State<TimeTable2> {
                                 children: [
                                   Container(
                                     padding: EdgeInsets.all(30),
-                                    width: 200,
+                                    width: 150,
                                     height: 100,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
@@ -603,7 +659,7 @@ class _TimeTableState extends State<TimeTable2> {
                                     child: Container(
                                       padding: EdgeInsets.all(30),
                                       color: statusColor,
-                                      width: 200,
+                                      width: 250,
                                       height: 100,
                                       child: Text(
                                         statusText,
